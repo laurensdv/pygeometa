@@ -326,11 +326,12 @@ def dcat_to_iso(rdf, schema=None, schema_local=None):
               ?md foaf:isPrimaryTopicOf ?a ;
                   dc:description ?abstract ;
                   dc:subject ?topicCategory ;
-                  dc:title ?title ;
-                  dc:temporal ?temporal .
-              ?temporal a dc:PeriodOfTime ;
+                  dc:title ?title .
+              OPTIONAL {
+                  ?md dc:temporal ?temporal .
+                  ?temporal a dc:PeriodOfTime ;
                   schema:startDate ?temporal_begin ;
-                  schema:endDate ?temporal_end .
+                  schema:endDate ?temporal_end } .
               OPTIONAL { ?md dc:alternative ?alternativeTitle } .
               OPTIONAL { ?md dc:created ?creation_date } .
               OPTIONAL { ?md dc:modified ?revision_date } .
@@ -373,8 +374,8 @@ def dcat_to_iso(rdf, schema=None, schema_local=None):
             result += "status=%s\n" % row['status'][len("http://purl.org/adms/status/"):]
 
         if row['maintenance_frequency'] is not None:
-            maintenance_frequency = row['maintenance_frequency'][len('http://publications.europa.eu/resource/authority/frequency/'):].lower()
-
+            maintenance_frequency = row['maintenance_frequency'][len('http://inspire.ec.europa.eu/metadata-codelist/MaintenanceFrequencyCode/'):].lower()
+            print(maintenance_frequency)
             if maintenance_frequency == "continuous":
                 maintenance_frequency = "continual"
             elif maintenance_frequency == "daily":
@@ -389,9 +390,9 @@ def dcat_to_iso(rdf, schema=None, schema_local=None):
                 maintenance_frequency = "biannually"
             elif maintenance_frequency == "annual":
                 maintenance_frequency = "annually"
-            elif maintenance_frequency == "notPlanned":
+            elif maintenance_frequency == "notplanned":
                 maintenance_frequency = "notPlanned"
-            elif maintenance_frequency == "asNeeded":
+            elif maintenance_frequency == "asneeded":
                 maintenance_frequency = "asNeeded"
             else:
                 maintenance_frequency = "irregular"
