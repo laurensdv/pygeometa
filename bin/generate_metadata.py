@@ -46,7 +46,7 @@
 
 import click
 
-from pygeometa import get_supported_schemas, render_template
+from pygeometa import get_supported_schemas, render_template, iso_to_dcat, dcat_to_iso
 
 SUPPORTED_SCHEMAS = get_supported_schemas()
 
@@ -55,6 +55,12 @@ SUPPORTED_SCHEMAS = get_supported_schemas()
 @click.option('--mcf',
               type=click.Path(exists=True, resolve_path=True),
               help='Path to metadata control file (.mcf)')
+@click.option('--rdf',
+              type=click.Path(exists=True, resolve_path=True),
+              help='Path to GeoDCAT-AP RDF file (.ttl/.rdf/.json/.jsonld/.nt/.nq/.n3)')
+@click.option('--xml',
+              type=click.Path(exists=True, resolve_path=True),
+              help='Path to ISO-19139 metadata file (.xml)')
 @click.option('--output', type=click.File('w', encoding='utf-8'),
               help='Name of output file')
 @click.option('--schema',
@@ -64,9 +70,30 @@ SUPPORTED_SCHEMAS = get_supported_schemas()
               type=click.Path(exists=True, resolve_path=True,
                               dir_okay=True, file_okay=False),
               help='Locally defined metadata schema')
-def process_args(mcf, schema, schema_local, output):
-    if mcf is None or (schema is None and schema_local is None):
+
+def process_args(mcf, rdf, xml, schema, schema_local, output):
+    if xml is not None and rdf is None:
+        rdf_output = iso_to_dcat(xml, schema=schema, schema_local=schema_local)
+
+        if output is None:
+            click.echo_via_pager(rdf_output)
+        else:
+            output.write(rdf_output)
+
+    elif rdf is not None and xml is None:
+        xml_output = dcat_to_iso(rdf, schema=schema, schema_local=schema_local)
+
+        # if output is None:
+        #     click.echo_via_pager(xml_output)
+        # else:
+        #     output.write(xml_output)
+
+    elif (rdf is None or xml is None) and mcf is None:
         raise click.UsageError('Missing arguments')
+
+    elif (mcf is None or (schema is None and schema_local is None)) and (rdf is None or xml is None):
+        raise click.UsageError('Missing arguments')
+
     else:
         content = render_template(mcf, schema=schema,
                                   schema_local=schema_local)

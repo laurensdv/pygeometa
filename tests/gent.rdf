@@ -1,0 +1,323 @@
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:cnt="http://www.w3.org/2011/content#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:dctype="http://purl.org/dc/dcmitype/" xmlns:earl="http://www.w3.org/ns/earl#" xmlns:dcat="http://www.w3.org/ns/dcat#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:wdrs="http://www.w3.org/2007/05/powder-s#" xmlns:prov="http://www.w3.org/ns/prov#" xmlns:vcard="http://www.w3.org/2006/vcard/ns#" xmlns:adms="http://www.w3.org/ns/adms#" xmlns:gsp="http://www.opengis.net/ont/geosparql#" xmlns:locn="http://www.w3.org/ns/locn#" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ns9="http://inspire.ec.europa.eu/schemas/geoportal/1.0" xmlns:i="http://inspire.ec.europa.eu/schemas/common/1.0" xmlns:schema="http://schema.org/">
+  <rdf:Description>
+    <foaf:isPrimaryTopicOf>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/ns/dcat#CatalogRecord"/>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DUT"/>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2016-03-24</dct:modified>
+        <dcat:contactPoint>
+          <vcard:Kind>
+            <vcard:organization-name xml:lang="nl">ALBON - Dienst Natuurlijke Rijkdommen</vcard:organization-name>
+            <vcard:hasEmail rdf:resource="mailto:katrien.denil@lne.vlaanderen.be"/>
+            <vcard:hasEmail rdf:resource="mailto:natuurlijkerijkdommen@lne.vlaanderen.be"/>
+          </vcard:Kind>
+        </dcat:contactPoint>
+        <prov:qualifiedAttribution>
+          <prov:Attribution>
+            <prov:agent>
+              <vcard:Kind>
+                <vcard:organization-name xml:lang="nl">ALBON - Dienst Natuurlijke Rijkdommen</vcard:organization-name>
+                <vcard:hasEmail rdf:resource="mailto:katrien.denil@lne.vlaanderen.be"/>
+                <vcard:hasEmail rdf:resource="mailto:natuurlijkerijkdommen@lne.vlaanderen.be"/>
+              </vcard:Kind>
+            </prov:agent>
+            <dct:type rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/pointOfContact"/>
+          </prov:Attribution>
+        </prov:qualifiedAttribution>
+        <dct:identifier rdf:datatype="http://www.w3.org/2001/XMLSchema#string">7e3150ee-7b6e-49b6-beb4-e7f0b207f5b2</dct:identifier>
+        <dct:isPartOf rdf:datatype="http://www.w3.org/2001/XMLSchema#string">51929dbb-2cc7-4b40-a9e9-d60c13faab54</dct:isPartOf>
+        <dct:source rdf:parseType="Resource">
+          <cnt:characterEncoding rdf:datatype="http://www.w3.org/2001/XMLSchema#string">UTF-8</cnt:characterEncoding>
+          <dct:conformsTo rdf:parseType="Resource">
+            <dct:title xml:lang="nl">Vlaamse metadatastandaard voor geografie - GDI-Vlaanderen metadataprofiel</dct:title>
+            <owl:versionInfo xml:lang="nl">2.1.2</owl:versionInfo>
+          </dct:conformsTo>
+        </dct:source>
+      </rdf:Description>
+    </foaf:isPrimaryTopicOf>
+    <rdf:type rdf:resource="http://www.w3.org/ns/dcat#Dataset"/>
+    <dct:type rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/ResourceType/dataset"/>
+    <dct:title xml:lang="nl">G3Dv2_ 0311, voorkomen van basis Fm van Gentbrugge</dct:title>
+    <dct:alternative xml:lang="nl">Geologisch 3D model Vlaamse Ondergrond versie2- voorkomensgrens van de basis van de Fm van Gentbrugge</dct:alternative>
+    <adms:status rdf:resource="http://purl.org/adms/status/completed"/>
+    <dct:description xml:lang="nl">De voorkomensgrens van de basis van de Fm van Gentbrugge geeft weer waar de sedimenten voorkomen, althans waar ze gemodelleerd zijn. Het Geologisch 3D model is opgemaakt in het kader van de beheersovereenkomst van de Vlaamse overheid met VITO, onder de noemer VLAKO, in opdracht van het departement LNE - Afdeling Land en Bodembescherming, Ondergrond, Natuurlijke Rijkdommen.</dct:description>
+    <dct:subject rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/TopicCategory/geoscientificInformation"/>
+    <dcat:theme rdf:parseType="Resource">
+      <skos:prefLabel xml:lang="nl"/>
+      <skos:inScheme>
+        <skos:ConceptScheme>
+          <dct:title xml:lang="nl">GEMET - INSPIRE thema's, versie 1.0</dct:title>
+          <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2008-06-01</dct:issued>
+        </skos:ConceptScheme>
+      </skos:inScheme>
+    </dcat:theme>
+    <dcat:theme rdf:parseType="Resource">
+      <skos:prefLabel xml:lang="nl">DOV</skos:prefLabel>
+      <skos:inScheme>
+        <skos:ConceptScheme>
+          <dct:title xml:lang="nl">DOV-versie 1</dct:title>
+          <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2011-04-11</dct:issued>
+        </skos:ConceptScheme>
+      </skos:inScheme>
+    </dcat:theme>
+    <dcat:theme rdf:parseType="Resource">
+      <skos:prefLabel xml:lang="nl">Geologie</skos:prefLabel>
+      <skos:inScheme>
+        <skos:ConceptScheme>
+          <dct:title xml:lang="nl">DOV-versie 1</dct:title>
+          <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2011-04-11</dct:issued>
+        </skos:ConceptScheme>
+      </skos:inScheme>
+    </dcat:theme>
+    <dcat:theme rdf:parseType="Resource">
+      <skos:prefLabel xml:lang="nl">Vlak</skos:prefLabel>
+      <skos:inScheme>
+        <skos:ConceptScheme>
+          <dct:title xml:lang="nl">DOV-versie 1</dct:title>
+          <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2011-04-11</dct:issued>
+        </skos:ConceptScheme>
+      </skos:inScheme>
+    </dcat:theme>
+    <dcat:theme rdf:parseType="Resource">
+      <skos:prefLabel xml:lang="nl">Raster</skos:prefLabel>
+      <skos:inScheme>
+        <skos:ConceptScheme>
+          <dct:title xml:lang="nl">DOV-versie 1</dct:title>
+          <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2011-04-11</dct:issued>
+        </skos:ConceptScheme>
+      </skos:inScheme>
+    </dcat:theme>
+    <dcat:theme rdf:parseType="Resource">
+      <skos:prefLabel xml:lang="nl">Voorkomen</skos:prefLabel>
+      <skos:inScheme>
+        <skos:ConceptScheme>
+          <dct:title xml:lang="nl">DOV-versie 1</dct:title>
+          <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2011-04-11</dct:issued>
+        </skos:ConceptScheme>
+      </skos:inScheme>
+    </dcat:theme>
+    <dcat:theme rdf:parseType="Resource">
+      <skos:prefLabel xml:lang="nl">Lithosfeer</skos:prefLabel>
+      <skos:inScheme>
+        <skos:ConceptScheme>
+          <dct:title xml:lang="nl">DOV-versie 1</dct:title>
+          <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2011-04-11</dct:issued>
+        </skos:ConceptScheme>
+      </skos:inScheme>
+    </dcat:theme>
+    <dcat:theme rdf:parseType="Resource">
+      <skos:prefLabel xml:lang="nl">Afzettingen</skos:prefLabel>
+      <skos:inScheme>
+        <skos:ConceptScheme>
+          <dct:title xml:lang="nl">DOV-versie 1</dct:title>
+          <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2011-04-11</dct:issued>
+        </skos:ConceptScheme>
+      </skos:inScheme>
+    </dcat:theme>
+    <dcat:theme rdf:parseType="Resource">
+      <skos:prefLabel xml:lang="nl">Toegevoegd GDI-Vl</skos:prefLabel>
+      <skos:inScheme>
+        <skos:ConceptScheme>
+          <dct:title xml:lang="nl">GDI-Vlaanderen Trefwoorden</dct:title>
+          <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-02-26</dct:issued>
+        </skos:ConceptScheme>
+      </skos:inScheme>
+    </dcat:theme>
+    <dcat:theme rdf:parseType="Resource">
+      <skos:prefLabel xml:lang="nl">Herbruikbaar</skos:prefLabel>
+      <skos:inScheme>
+        <skos:ConceptScheme>
+          <dct:title xml:lang="nl">GDI-Vlaanderen Trefwoorden</dct:title>
+          <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-02-26</dct:issued>
+        </skos:ConceptScheme>
+      </skos:inScheme>
+    </dcat:theme>
+    <dcat:theme rdf:parseType="Resource">
+      <skos:prefLabel xml:lang="nl">Vlaamse Open data</skos:prefLabel>
+      <skos:inScheme>
+        <skos:ConceptScheme>
+          <dct:title xml:lang="nl">GDI-Vlaanderen Trefwoorden</dct:title>
+          <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-02-26</dct:issued>
+        </skos:ConceptScheme>
+      </skos:inScheme>
+    </dcat:theme>
+    <dcat:theme rdf:parseType="Resource">
+      <skos:prefLabel xml:lang="nl">Kosteloos</skos:prefLabel>
+      <skos:inScheme>
+        <skos:ConceptScheme>
+          <dct:title xml:lang="nl">GDI-Vlaanderen Trefwoorden</dct:title>
+          <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-02-26</dct:issued>
+        </skos:ConceptScheme>
+      </skos:inScheme>
+    </dcat:theme>
+    <dcat:theme rdf:parseType="Resource">
+      <skos:prefLabel xml:lang="nl">Lijst M&amp;R INSPIRE</skos:prefLabel>
+      <skos:inScheme>
+        <skos:ConceptScheme>
+          <dct:title xml:lang="nl">GDI-Vlaanderen Trefwoorden</dct:title>
+          <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-02-26</dct:issued>
+        </skos:ConceptScheme>
+      </skos:inScheme>
+    </dcat:theme>
+    <dcat:theme rdf:parseType="Resource">
+      <skos:prefLabel xml:lang="nl">Metadata INSPIRE-conform</skos:prefLabel>
+      <skos:inScheme>
+        <skos:ConceptScheme>
+          <dct:title xml:lang="nl">GDI-Vlaanderen Trefwoorden</dct:title>
+          <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-02-26</dct:issued>
+        </skos:ConceptScheme>
+      </skos:inScheme>
+    </dcat:theme>
+    <dcat:theme rdf:parseType="Resource">
+      <skos:prefLabel xml:lang="nl">Metadata GDI-Vl-conform</skos:prefLabel>
+      <skos:inScheme>
+        <skos:ConceptScheme>
+          <dct:title xml:lang="nl">GDI-Vlaanderen Trefwoorden</dct:title>
+          <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-02-26</dct:issued>
+        </skos:ConceptScheme>
+      </skos:inScheme>
+    </dcat:theme>
+    <dct:identifier rdf:datatype="http://www.w3.org/2001/XMLSchema#string">399c0a48-cf9a-4f52-9254-d36f941de263</dct:identifier>
+    <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DUT"/>
+    <dct:spatial rdf:parseType="Resource">
+      <locn:geometry rdf:datatype="http://www.opengis.net/ont/geosparql#wktLiteral"><![CDATA[POLYGON((2.41580758276922 51.54070375866491,5.9673270770793705 51.54070375866491,5.9673270770793705 50.68993713718051,2.41580758276922 50.68993713718051,2.41580758276922 51.54070375866491))]]></locn:geometry>
+      <locn:geometry rdf:datatype="http://www.opengis.net/ont/geosparql#gmlLiteral"><![CDATA[<gml:Envelope srsName="http://www.opengis.net/def/crs/OGC/1.3/CRS84"><gml:lowerCorner>2.41580758276922 50.68993713718051</gml:lowerCorner><gml:upperCorner>5.9673270770793705 51.54070375866491</gml:upperCorner></gml:Envelope>]]></locn:geometry>
+      <locn:geometry rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"><![CDATA[{"type":"Polygon","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}},"coordinates":[[[2.41580758276922,51.54070375866491],[5.9673270770793705,51.54070375866491],[5.9673270770793705,50.68993713718051],[2.41580758276922,50.68993713718051],[2.41580758276922,51.54070375866491]]]}]]></locn:geometry>
+    </dct:spatial>
+    <dct:spatial rdf:parseType="Resource">
+      <skos:prefLabel xml:lang="nl">Vlaanderen</skos:prefLabel>
+    </dct:spatial>
+    <dct:temporal>
+      <dct:PeriodOfTime>
+        <schema:startDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2004-04-01</schema:startDate>
+        <schema:endDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2011-08-01</schema:endDate>
+      </dct:PeriodOfTime>
+    </dct:temporal>
+    <dct:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2013-10-02</dct:created>
+    <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2013-11-12</dct:issued>
+    <dct:provenance>
+      <dct:ProvenanceStatement>
+        <rdfs:label xml:lang="nl">zie rapport Matthijs, J., Lanckacker, T., De Koninck, R., Deckers, J., Lagrou, D., Broothaers, M., 2013. Geologisch 3D lagenmodel van Vlaanderen en het Brussels Hoofdstedelijk Gewest &#8211; versie 2, G3Dv2. Studie uitgevoerd door VITO in opdracht van de Vlaamse overheid, Departement Leefmilieu, Natuur en Energie, Afdeling Land en Bodembescherming, Ondergrond, Natuurlijke Rijkdommen. 2013/R/ETE/43, 21p.</rdfs:label>
+      </dct:ProvenanceStatement>
+    </dct:provenance>
+    <dct:conformsTo rdf:parseType="Resource">
+      <dct:type rdf:resource="http://inspire.ec.europa.eu/glossary/SpatialReferenceSystem"/>
+      <skos:prefLabel xml:lang="nl">Belge_Lambert_1972 (31370)</skos:prefLabel>
+      <skos:inScheme>
+        <skos:ConceptScheme>
+          <dct:title xml:lang="nl">EPSG</dct:title>
+        </skos:ConceptScheme>
+      </skos:inScheme>
+    </dct:conformsTo>
+    <dct:conformsTo rdf:parseType="Resource">
+      <dct:type rdf:resource="http://inspire.ec.europa.eu/glossary/SpatialReferenceSystem"/>
+      <skos:prefLabel xml:lang="nl">TAW</skos:prefLabel>
+      <skos:inScheme>
+        <skos:ConceptScheme>
+          <dct:title xml:lang="nl">NGI</dct:title>
+        </skos:ConceptScheme>
+      </skos:inScheme>
+    </dct:conformsTo>
+    <rdfs:comment xml:lang="en">Spatial resolution (equivalent scale): 1:50000</rdfs:comment>
+    <dct:conformsTo rdf:parseType="Resource">
+      <dct:title xml:lang="nl">VERORDENING (EU) Nr. 1089/2010 VAN DE COMMISSIE van 23 november 2010 ter uitvoering van Richtlijn 2007/2/EG van het Europees Parlement en de Raad betreffende de interoperabiliteit van verzamelingen ruimtelijke gegevens en van diensten met betrekking tot ruimtelijke gegevens</dct:title>
+      <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2010-12-08</dct:issued>
+    </dct:conformsTo>
+    <prov:wasUsedBy>
+      <prov:Activity>
+        <prov:qualifiedAssociation rdf:parseType="Resource">
+          <prov:hadPlan rdf:parseType="Resource">
+            <prov:wasDerivedFrom rdf:parseType="Resource">
+              <dct:title xml:lang="nl">VERORDENING (EU) Nr. 1089/2010 VAN DE COMMISSIE van 23 november 2010 ter uitvoering van Richtlijn 2007/2/EG van het Europees Parlement en de Raad betreffende de interoperabiliteit van verzamelingen ruimtelijke gegevens en van diensten met betrekking tot ruimtelijke gegevens</dct:title>
+              <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2010-12-08</dct:issued>
+            </prov:wasDerivedFrom>
+          </prov:hadPlan>
+        </prov:qualifiedAssociation>
+        <prov:generated rdf:parseType="Resource">
+          <dct:type rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/DegreeOfConformity/conformant"/>
+          <dct:description xml:lang="nl">Zie vermelde specificatie</dct:description>
+        </prov:generated>
+      </prov:Activity>
+    </prov:wasUsedBy>
+    <dcat:landingPage>
+      <foaf:Document rdf:about="https://www.dov.vlaanderen.be/geoserver/g3dv2/g3dv2_v_0311_pa_ge_b/wms?">
+        <dct:title xml:lang="nl">g3dv2:g3dv2_v_0311_pa_ge_b</dct:title>
+        <dct:description xml:lang="nl">OGC:WMS endpoint</dct:description>
+      </foaf:Document>
+    </dcat:landingPage>
+    <dcat:landingPage>
+      <foaf:Document rdf:about="https://www.milieuinfo.be/dms/d/a/workspace/SpacesStore/da772ccd-dcb3-4f5b-89c6-2b8e47e8847e/G3Dv2_voorkomensgrenzen.zip">
+        <dct:description xml:lang="nl">Link naar gecomprimeerde shape files van alle voorkomensgrenzen per eenheid</dct:description>
+      </foaf:Document>
+    </dcat:landingPage>
+    <dcat:landingPage>
+      <foaf:Document rdf:about="https://www.milieuinfo.be/dms/d/a/workspace/SpacesStore/2f737bdf-e2c9-466f-92d6-64a06c21b7bf/G3Dv2_rapporten.zip">
+        <dct:title xml:lang="nl">Downloaden rapporten</dct:title>
+        <dct:description xml:lang="nl">Link naar de gecomprimeerde rapporten horende bij G3Dv2</dct:description>
+      </foaf:Document>
+    </dcat:landingPage>
+    <prov:qualifiedAttribution>
+      <prov:Attribution>
+        <prov:agent>
+          <vcard:Kind>
+            <vcard:organization-name xml:lang="nl">ALBON - Dienst Natuurlijke Rijkdommen</vcard:organization-name>
+            <vcard:hasEmail rdf:resource="mailto:katrien.denil@lne.vlaanderen.be"/>
+            <vcard:hasEmail rdf:resource="mailto:natuurlijkerijkdommen@lne.vlaanderen.be"/>
+            <vcard:hasURL rdf:resource="http://www.lne.be"/>
+          </vcard:Kind>
+        </prov:agent>
+        <dct:type rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/custodian"/>
+      </prov:Attribution>
+    </prov:qualifiedAttribution>
+    <prov:qualifiedAttribution>
+      <prov:Attribution>
+        <prov:agent>
+          <vcard:Kind>
+            <vcard:organization-name xml:lang="nl">DOV</vcard:organization-name>
+            <vcard:hasEmail rdf:resource="mailto:dov@vlaanderen.be"/>
+            <vcard:hasURL rdf:resource="http://dov.vlaanderen.be"/>
+          </vcard:Kind>
+        </prov:agent>
+        <dct:type rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/distributor"/>
+      </prov:Attribution>
+    </prov:qualifiedAttribution>
+    <dct:creator>
+      <foaf:Organization>
+        <foaf:name xml:lang="nl">VITO</foaf:name>
+        <foaf:mbox rdf:resource="mailto:roel.dekoninck@vito.be"/>
+      </foaf:Organization>
+    </dct:creator>
+    <prov:qualifiedAttribution>
+      <prov:Attribution>
+        <prov:agent>
+          <vcard:Kind>
+            <vcard:organization-name xml:lang="nl">VITO</vcard:organization-name>
+            <vcard:hasEmail rdf:resource="mailto:roel.dekoninck@vito.be"/>
+          </vcard:Kind>
+        </prov:agent>
+        <dct:type rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/author"/>
+      </prov:Attribution>
+    </prov:qualifiedAttribution>
+    <dct:rightsHolder>
+      <foaf:Organization>
+        <foaf:name xml:lang="nl">ALBON - Dienst Natuurlijke Rijkdommen</foaf:name>
+        <foaf:mbox rdf:resource="mailto:jan.vanroo@lne.vlaanderen.be"/>
+        <foaf:mbox rdf:resource="mailto:natuurlijkerijkdommen@lne.vlaanderen.be"/>
+        <foaf:workplaceHomepage rdf:resource="http://www.lne.be"/>
+      </foaf:Organization>
+    </dct:rightsHolder>
+    <prov:qualifiedAttribution>
+      <prov:Attribution>
+        <prov:agent>
+          <vcard:Kind>
+            <vcard:organization-name xml:lang="nl">ALBON - Dienst Natuurlijke Rijkdommen</vcard:organization-name>
+            <vcard:hasEmail rdf:resource="mailto:jan.vanroo@lne.vlaanderen.be"/>
+            <vcard:hasEmail rdf:resource="mailto:natuurlijkerijkdommen@lne.vlaanderen.be"/>
+            <vcard:hasURL rdf:resource="http://www.lne.be"/>
+          </vcard:Kind>
+        </prov:agent>
+        <dct:type rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/owner"/>
+      </prov:Attribution>
+    </prov:qualifiedAttribution>
+  </rdf:Description>
+</rdf:RDF>
