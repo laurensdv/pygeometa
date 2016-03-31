@@ -55,6 +55,8 @@ import re
 from xml.dom import minidom
 import lxml.etree as ET
 from pygeometa.dcatap2iso19139 import convert
+import tempfile
+import codecs
 
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
@@ -76,8 +78,8 @@ def get_charstring(option, section_items, language,
     """convenience function to return unilingual or multilingual value(s)"""
 
     section_items = dict(section_items)
-    option_value1 = None
-    option_value2 = None
+    option_value1 = ""
+    option_value2 = ""
 
     if 'language_alternate' is None:  # unilingual
         option_tmp = '{}_{}'.format(option, language)
@@ -189,11 +191,15 @@ def render_template(mcf, schema=None, schema_local=None):
     elif schema is None:  # user-defined
         abspath = schema_local
 
+    def debug(text):
+        print(text)
+
     LOGGER.debug('Setting up template environment {}'.format(abspath))
     env = Environment(loader=FileSystemLoader([abspath, TEMPLATES]))
     env.filters['normalize_datestring'] = normalize_datestring
     env.filters['get_distribution_language'] = get_distribution_language
     env.filters['get_charstring'] = get_charstring
+    env.filters['debug'] = debug
     env.globals.update(zip=zip)
     env.globals.update(get_charstring=get_charstring)
     env.globals.update(normalize_datestring=normalize_datestring)
@@ -209,6 +215,7 @@ def render_template(mcf, schema=None, schema_local=None):
     LOGGER.debug('Processing template')
     xml = template.render(record=read_mcf(mcf),
                           software_version=__version__).encode('utf-8')
+
     return pretty_print(xml)
 
 
@@ -228,11 +235,19 @@ def iso_to_dcat(xml, schema=None, schema_local=None):
 
     return unicode(ET.tostring(newdom, pretty_print=True), "UTF-8")
 
+
 def dcat_to_iso(rdf, schema=None, schema_local=None):
     result = convert(rdf)
+    _, fp = tempfile.mkstemp()
 
-    print(result)
-    return None
+    with codecs.open(fp, 'w', encoding='utf-8') as f:
+        f.write(u'%s' % result)
+    f.close()
+
+    if schema is None:
+        schema = 'iso19139-flanders'  # Flanders schema by default
+
+    return render_template(fp, schema, schema_local)
 
 def get_supported_schemas():
     """returns a list of supported schemas"""

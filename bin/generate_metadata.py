@@ -83,10 +83,10 @@ def process_args(mcf, rdf, xml, schema, schema_local, output):
     elif rdf is not None and xml is None:
         xml_output = dcat_to_iso(rdf, schema=schema, schema_local=schema_local)
 
-        # if output is None:
-        #     click.echo_via_pager(xml_output)
-        # else:
-        #     output.write(xml_output)
+        if output is None:
+             click.echo_via_pager(xml_output)
+        else:
+             output.write(xml_output)
 
     elif (rdf is None or xml is None) and mcf is None:
         raise click.UsageError('Missing arguments')

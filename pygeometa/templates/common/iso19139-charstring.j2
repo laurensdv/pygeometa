@@ -1,9 +1,9 @@
 {% macro get_freetext(element, language_alternate, myvars) -%}
-{% if language_alternate is none or myvars[1] is none %}
+{% if language_alternate is none or language_alternate is undefined or myvars[1] is none or myvars[1] is undefined %}
       <gmd:{{ element }}>
         <gco:CharacterString>{{ myvars[0]|trim|e }}</gco:CharacterString>
       </gmd:{{ element }}>
-{% else %}
+{% else %}q
       <gmd:{{ element }} xsi:type="gmd:PT_FreeText_PropertyType">
         <gco:CharacterString>{{ myvars[0]|trim|e }}</gco:CharacterString>
           <gmd:PT_FreeText>

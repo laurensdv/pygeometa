@@ -70,7 +70,6 @@ def convert(rdf):
 
     for row in qres:
         if row['hierarchyLevel'] is not None:
-            print(row['hierarchyLevel'])
             if "spatialdataservicetype" in row['hierarchyLevel'].lower():
                 result += "spatialdataservicetype=%s\n" % row['hierarchyLevel'].lower()[row['hierarchyLevel'].rfind('/')+1:]
             elif not "hierarchyLevel" in result:
@@ -130,13 +129,13 @@ def convert(rdf):
 
     for row in qres:
         if row['title'] is not None:
-            result += "title_%s=%s\n" % (row['title'].language, row['title'])  # title_nl?
+            result += "title=%s\n" % row['title']  # title_nl?  row['title'].language
 
         if row['alternativeTitle'] is not None:
-            result += "alternative_title_%s=%s\n" % (row['alternativeTitle'].language, row['alternativeTitle'])
+            result += "alternative_title=%s\n" % row['alternativeTitle']  # row['alternativeTitle'].language
 
         if row['abstract'] is not None:
-            result += "abstract_%s=%s\n" % (row['abstract'].language, row['abstract'])
+            result += "abstract=%s\n" % row['abstract'] # row['abstract'].language
 
         if row['creation_date'] is not None:
             result += "creation_date=%s\n" % row['creation_date']
@@ -161,7 +160,7 @@ def convert(rdf):
             result += "status=%s\n" % row['status'][len("http://purl.org/adms/status/"):]
 
         if row['url'] is not None:
-            result += "url_%s=%s\n" % (row['url'].language, row['url'])  # include language tag?
+            result += "url=%s\n" % row['url']  # include language tag? row['url'].language
 
         if row['other_constraints'] is not None:
             result += "otherconstraints=%s\n" % row['other_constraints']  # include language tag?
@@ -210,30 +209,36 @@ def convert(rdf):
            }""")
 
     keywords = {}
-    keywords_noCategory = set()
+    keywords_no_category = set()
     issued = {}
     language = {}
 
     for row in qres:
         if row['keywordNoCat'] is not None:
-            keywords_noCategory.add(row['keywordNoCat'])
+            keywords_no_category.add(row['keywordNoCat'])
 
-        if row['theme'] is not None:
+        if row['scheme_title'] is None:
+            if row['keyword'] is not None:
+                keywords_no_category.add(row['keyword'])
+
+        elif row['theme'] is not None:
             if row['scheme_title'] not in keywords.keys():
                 keywords[row['scheme_title']] = []
-            keywords[row['scheme_title']].append(row['keyword'])
-            issued[row['scheme_title']] = row['scheme_issued']
-            language[row['scheme_title']] = row['keyword'].language
+            if row['keyword'] is not None:
+                keywords[row['scheme_title']].append(row['keyword'])
+                language[row['scheme_title']] = row['keyword'].language
+            if row['scheme_issued'] is not None:
+                issued[row['scheme_title']] = row['scheme_issued']
 
-    if len(keywords_noCategory) > 0:
-        result += 'keywords_%s=%s\n' % (list(keywords_noCategory)[0].language, ','.join(keywords_noCategory))  # keywords_nl?
+    if len(keywords_no_category) > 0:
+        result += 'keywords=%s\n' % ','.join(keywords_no_category) # keywords_nl? (list(keywords_no_category)[0].language,
 
     if len(keywords.keys()) > 0:
         result += 'thesauri=%s\n' % '\/'.join(keywords.keys())
 
     for thesaurus in keywords.keys():
         result += '\n[%s]\n' % thesaurus
-        result += 'keywords_%s=%s\n' % (language[thesaurus], ','.join(keywords[thesaurus]))  # keywords_nl?
+        result += 'keywords=%s\n' % ','.join(keywords[thesaurus]) # keywords_nl? language[thesaurus]
         result += 'issued=%s\n' % issued[thesaurus]
         if row['scheme_type'] is not None:
             result += 'keywords_type=%s\n' % row['scheme_type']
@@ -247,7 +252,7 @@ def convert(rdf):
                 ?md dc:conformsTo ?crsr .
                 ?crsr dc:type <http://inspire.ec.europa.eu/glossary/SpatialReferenceSystem> ;
                       skos:inScheme ?crss .
-                ?crss dc:title ?crst .
+                OPTIONAL { ?crss dc:title ?crst } .
               } .
               OPTIONAL {
                 ?md dc:conformsTo ?crsr .
@@ -271,13 +276,14 @@ def convert(rdf):
                 result += 'crs=%s\n' % row['crsl']
                 if row['crst'] is not None:
                     result += 'crst=%s\n' % row['crst']
+                elif row['crss'] is not None:
+                    result += 'crst=%s\n' % row['crss']
 
             elif row['crsu'] is not None:
                 result += 'crs=%s\n' % row['crsu']
 
         if row['geometry'] is not None:
             geometries.add(row['geometry'])
-
 
     for geometry in geometries:
         if "JSON" in geometry.datatype.upper():  # TODO: support for other formats as well
@@ -325,7 +331,7 @@ def convert(rdf):
 
         for r in qr:
             if r['organization'] is not None:
-                res += "organization_%s=%s\n" % (r['organization'].language, r['organization'])
+                res += "organization=%s\n" % r['organization']  # r['organization'].language
             if r['email'] is not None:
                 res += "email=%s\n" % r['email'][len('mailto:'):]
             if r['url'] is not None:
@@ -372,13 +378,8 @@ def convert(rdf):
         result += "\n[distribution:url%s]\n" % str(i)
         result += "url=%s\n" % landing_page
         if landing_pages[landing_page]['title'] is not None:
-            result += "name_%s=%s\n" % (landing_pages[landing_page]['title'].language, landing_pages[landing_page]['title'])
+            result += "name=%s\n" % landing_pages[landing_page]['title']  # landing_pages[landing_page]['title'].language
         if landing_pages[landing_page]['description'] is not None:
-            result += "description_%s=%s\n" % (landing_pages[landing_page]['description'].language, landing_pages[landing_page]['description'])
+            result += "description=%s\n" % landing_pages[landing_page]['description']  # landing_pages[landing_page]['description'].language
 
     return result
-
-
-
-
-
