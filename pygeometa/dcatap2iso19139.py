@@ -348,6 +348,34 @@ def convert(rdf):
 
     result += extract_contact(g, 'pointOfContact', 'main')
 
+    result += extract_contact(g, 'distributor', 'distribution')
+
+    qres = g.query(
+        PREFIXES +
+        """SELECT DISTINCT *
+           WHERE {
+              ?md dcat:landingPage ?url .
+              ?url a foaf:Document .
+              OPTIONAL { ?url dc:title ?title } .
+              OPTIONAL { ?url dc:description ?description } .
+           }""")
+
+    landing_pages = {}
+
+    for row in qres:
+        if row['url'] is not None:
+            landing_pages[row['url']] = {'title': row['title'], 'description': row['description']}
+
+    i = 0
+    for landing_page in landing_pages.keys():
+        i += 1
+        result += "\n[distribution:url%s]\n" % str(i)
+        result += "url=%s\n" % landing_page
+        if landing_pages[landing_page]['title'] is not None:
+            result += "name_%s=%s\n" % (landing_pages[landing_page]['title'].language, landing_pages[landing_page]['title'])
+        if landing_pages[landing_page]['description'] is not None:
+            result += "description_%s=%s\n" % (landing_pages[landing_page]['description'].language, landing_pages[landing_page]['description'])
+
     return result
 
 
