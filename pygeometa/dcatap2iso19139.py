@@ -130,13 +130,13 @@ def convert(rdf):
 
     for row in qres:
         if row['title'] is not None:
-            result += "title=%s\n" % row['title']  # title_nl?
+            result += "title_%s=%s\n" % (row['title'].language, row['title'])  # title_nl?
 
         if row['alternativeTitle'] is not None:
-            result += "alternative_title=%s\n" % row['alternativeTitle']
+            result += "alternative_title_%s=%s\n" % (row['alternativeTitle'].language, row['alternativeTitle'])
 
         if row['abstract'] is not None:
-            result += "abstract=%s\n" % row['abstract']
+            result += "abstract_%s=%s\n" % (row['abstract'].language, row['abstract'])
 
         if row['creation_date'] is not None:
             result += "creation_date=%s\n" % row['creation_date']
@@ -161,7 +161,7 @@ def convert(rdf):
             result += "status=%s\n" % row['status'][len("http://purl.org/adms/status/"):]
 
         if row['url'] is not None:
-            result += "url=%s\n" % row['url']  # include language tag?
+            result += "url_%s=%s\n" % (row['url'].language, row['url'])  # include language tag?
 
         if row['other_constraints'] is not None:
             result += "otherconstraints=%s\n" % row['other_constraints']  # include language tag?
