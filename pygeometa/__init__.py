@@ -73,6 +73,7 @@ TRANSFORMATIONS = '%s%stransformations' % (os.path.dirname(os.path.realpath(__fi
 
 PREFIXES = """prefix foaf: <http://xmlns.com/foaf/0.1/>
 prefix dc: <http://purl.org/dc/terms/>
+prefix dc11: <http://purl.org/dc/elements/1.1/>
 prefix dcat: <http://www.w3.org/ns/dcat#>
 prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 prefix vcard: <http://www.w3.org/2006/vcard/ns#>
@@ -292,7 +293,7 @@ def dcat_to_iso(rdf, schema=None, schema_local=None):
            }""")
 
     for row in qres:
-        if row['hierarchyLevel'] is not None:
+        if row['hierarchyLevel'] is not None and not "hierarchylevel" in result:
             if "dataset" in row['hierarchyLevel'].lower():
                 result += "hierarchylevel=dataset\n"
             elif "service" in row['hierarchyLevel'].lower():
@@ -326,8 +327,8 @@ def dcat_to_iso(rdf, schema=None, schema_local=None):
            WHERE {
               ?md foaf:isPrimaryTopicOf ?a ;
                   dc:description ?abstract ;
-                  dc:subject ?topicCategory ;
                   dc:title ?title .
+              OPTIONAL { ?md dc:subject ?topicCategory } .
               OPTIONAL {
                   ?md dc:temporal ?temporal .
                   ?temporal a dc:PeriodOfTime ;
@@ -340,7 +341,10 @@ def dcat_to_iso(rdf, schema=None, schema_local=None):
               OPTIONAL { ?md adms:status ?status } .
               OPTIONAL { ?md dct:accrualPeriodicity ?maintenance_frequency } .
               OPTIONAL { ?md iso:supplementalInformation ?url } .
-           } LIMIT 1""")
+              OPTIONAL {
+                ?md dc:accessRights ?rightsStatement .
+                ?rightsStatement rdfs:label ?other_constraints } .
+           }""")
 
     result += "\n[identification]\n"
 
@@ -378,6 +382,9 @@ def dcat_to_iso(rdf, schema=None, schema_local=None):
         if row['url'] is not None:
             result += "url=%s\n" % row['url']  # include language tag?
 
+        if row['other_constraints'] is not None:
+            result += "otherconstraints=%s\n" % row['other_constraints']  # include language tag?
+
         if row['maintenance_frequency'] is not None:
             maintenance_frequency = row['maintenance_frequency'][len('http://inspire.ec.europa.eu/metadata-codelist/MaintenanceFrequencyCode/'):].lower()
 
@@ -408,30 +415,39 @@ def dcat_to_iso(rdf, schema=None, schema_local=None):
         PREFIXES +
         """SELECT DISTINCT *
            WHERE {
-              ?md dcat:theme ?theme .
-              ?theme skos:prefLabel ?keyword .
+              OPTIONAL {
+                  ?md dcat:theme ?theme .
+                  ?theme skos:prefLabel ?keyword } .
+              OPTIONAL { ?md dc11:subject ?keywordNoCat } .
               OPTIONAL {
                   ?theme skos:inScheme ?scheme .
                   ?scheme a skos:ConceptScheme ;
                          dc:title ?scheme_title ;
                          dc:issued ?scheme_issued } .
-              OPTIONAL { ?scheme dc:type ?scheme_type }
+              OPTIONAL { ?scheme dc:type ?scheme_type } .
            }""")
 
     keywords = {}
+    keywords_noCategory = set()
     issued = {}
     language = {}
 
     for row in qres:
+        if row['keywordNoCat'] is not None:
+            keywords_noCategory.add(row['keywordNoCat'])
+
         if row['theme'] is not None:
             if row['scheme_title'] not in keywords.keys():
                 keywords[row['scheme_title']] = []
             keywords[row['scheme_title']].append(row['keyword'])
             issued[row['scheme_title']] = row['scheme_issued']
             language[row['scheme_title']] = row['keyword'].language
-    print(keywords)
 
-    result += 'thesauri=%s\n' % '\/'.join(keywords.keys())
+    if len(keywords_noCategory) > 0:
+        result += 'keywords_%s=%s\n' % (list(keywords_noCategory)[0].language, ','.join(keywords_noCategory))  # keywords_nl?
+
+    if len(keywords.keys()) > 0:
+        result += 'thesauri=%s\n' % '\/'.join(keywords.keys())
 
     for thesaurus in keywords.keys():
         result += '\n[%s]\n' % thesaurus

@@ -166,6 +166,16 @@
           </gmd:maintenanceAndUpdateFrequency>
         </gmd:MD_MaintenanceInformation>
       </gmd:resourceMaintenance>
+      {% if record['identifcation']['keywords'] %}
+      <gmd:descriptiveKeywords>
+        <gmd:MD_Keywords>
+        {% set keywords = get_charstring('keywords', record['identification'], record['metadata']['language'], record['metadata']['language_alternate']) %}
+        {% for kw1, kw2 in zip(keywords[0].split(','), keywords[1].split(',')) %}
+        {{ cs.get_freetext('keyword', record['metadata']['language_alternate'], [kw1, kw2]) }}
+        {% endfor %}
+        </gmd:MD_Keywords>
+      </gmd:descriptiveKeywords>
+      {% endif %}
       {% set thesauri = record['identification']['thesauri'].split('\/') %}
       {% for thesaurus in thesauri %}
       <gmd:descriptiveKeywords>
@@ -202,9 +212,15 @@
       {% endfor %}
       <gmd:resourceConstraints>
         <gmd:MD_LegalConstraints>
+          {% if record['identification']['accessconstraints'] %}
           <gmd:accessConstraints>
             <gmd:MD_RestrictionCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_RestrictionCode" codeSpace="ISOTC211/19115" codeListValue="{{ record['identification']['accessconstraints'] }}">{{ record['identification']['accessconstraints'] }}</gmd:MD_RestrictionCode>
           </gmd:accessConstraints>
+          {% endif %}
+          {% if record['identification']['otherconstraints'] %}
+          <gmd:otherConstraints>
+            <gco:CharacterString>{{ record['identification']['otherconstraints'] }}</gco:CharacterString>          </gmd:otherConstraints>
+          {% endif %}
         </gmd:MD_LegalConstraints>
       </gmd:resourceConstraints>
       <gmd:spatialRepresentationType>
