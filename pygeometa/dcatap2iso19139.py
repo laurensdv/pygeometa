@@ -1,0 +1,240 @@
+import rdflib
+import os
+import re
+
+PREFIXES = """prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix dc: <http://purl.org/dc/terms/>
+prefix dc11: <http://purl.org/dc/elements/1.1/>
+prefix dcat: <http://www.w3.org/ns/dcat#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix vcard: <http://www.w3.org/2006/vcard/ns#>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix content: <http://www.w3.org/2011/content#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix locn: <http://www.w3.org/ns/locn#>
+prefix gsp: <http://www.opengis.net/ont/geosparql#>
+prefix geo: <https://www.iana.org/assignments/media-types/application/vnd.geo+>
+prefix schema: <http://schema.org/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix adms: <http://www.w3.org/ns/adms#>
+prefix iso: <http://def.seegrid.csiro.au/isotc211/iso19115/2003/metadata#>
+
+"""
+
+
+def convert(rdf):
+    g = rdflib.Graph()
+    g.parse(os.path.realpath(rdf))
+
+    result = ""
+    qres = g.query(  # Mandatory -> required; Optional -> OPTIONAL
+        PREFIXES +
+        """SELECT DISTINCT *
+           WHERE {
+              ?md foaf:isPrimaryTopicOf ?a .
+              ?a a dcat:CatalogRecord ;
+              dc:language ?language ;
+              dc:identifier ?identifier ;
+              dc:modified ?datestamp ;
+              dc:source ?source .
+              ?source content:characterEncoding ?charset .
+              OPTIONAL { ?a dc:hasParent ?parent } .
+              OPTIONAL { ?source dc:conformsTo ?c } .
+              OPTIONAL { ?c dc:title ?metadatastandardname } .
+              OPTIONAL { ?c owl:versionInfo ?metadatastandardversion } .
+           } LIMIT 1""")
+
+    result += "[metadata]\n"
+
+    for row in qres:
+        if row['language'] is not None:
+            result += "language=%s\n" % (row['language'][-3:].lower())
+        if row['identifier'] is not None:
+            result += "identifier=%s\n" % row['identifier']
+        if row['parent'] is not None:
+            result += "parent=%s\n" % row['parent']
+        if row['charset'] is not None:
+            result += "charset=%s\n" % re.sub(r'\W+', '', row['charset'].lower())
+        if row['datestamp'] is not None:
+            result += "datestamp=%s\n" % row['datestamp']
+
+    qres = g.query(
+        PREFIXES +
+        """SELECT DISTINCT *
+           WHERE {
+              ?md dc:type ?hierarchyLevel .
+              ?md foaf:isPrimaryTopicOf ?a .
+           }""")
+
+    for row in qres:
+        if row['hierarchyLevel'] is not None:
+            print(row['hierarchyLevel'])
+            if "spatialdataservicetype" in row['hierarchyLevel'].lower():
+                result += "spatialdataservicetype=%s\n" % row['hierarchyLevel'].lower()[row['hierarchyLevel'].rfind('/')+1:]
+            elif not "hierarchyLevel" in result:
+                if "dataset" in row['hierarchyLevel'].lower():
+                    result += "hierarchylevel=dataset\n"
+                elif "service" in row['hierarchyLevel'].lower():
+                    result += "hierarchylevel=service\n"
+                elif "catalog" in row['hierarchyLevel'].lower():
+                    result += "hierarchylevel=discovery\n"
+                elif "series" in row['hierarchyLevel'].lower():
+                    result += "hierarchylevel=series\n"
+
+    qres = g.query(
+        PREFIXES +
+        """SELECT DISTINCT *
+           WHERE {
+              ?md foaf:isPrimaryTopicOf ?a .
+              ?a a dcat:CatalogRecord ;
+              dc:source ?source .
+              ?source dc:conformsTo ?c .
+              OPTIONAL { ?c dc:title ?metadatastandardname } .
+              OPTIONAL { ?c owl:versionInfo ?metadatastandardversion } .
+           } LIMIT 1""")
+
+    for row in qres:
+        if row['metadatastandardname'] is not None:
+            result += "metadatastandardname=%s\n" % row['metadatastandardname']
+        if row['metadatastandardversion'] is not None:
+            result += "metadatastandardversion=%s\n" % row['metadatastandardversion']
+
+    qres = g.query(
+        PREFIXES +
+        """SELECT DISTINCT *
+           WHERE {
+              ?md foaf:isPrimaryTopicOf ?a ;
+                  dc:description ?abstract ;
+                  dc:title ?title .
+              OPTIONAL { ?md dc:subject ?topicCategory } .
+              OPTIONAL {
+                  ?md dc:temporal ?temporal .
+                  ?temporal a dc:PeriodOfTime ;
+                  schema:startDate ?temporal_begin ;
+                  schema:endDate ?temporal_end } .
+              OPTIONAL { ?md dc:alternative ?alternativeTitle } .
+              OPTIONAL { ?md dc:created ?creation_date } .
+              OPTIONAL { ?md dc:modified ?revision_date } .
+              OPTIONAL { ?md dc:issued ?publication_date } .
+              OPTIONAL { ?md adms:status ?status } .
+              OPTIONAL { ?md dct:accrualPeriodicity ?maintenance_frequency } .
+              OPTIONAL { ?md iso:supplementalInformation ?url } .
+              OPTIONAL {
+                ?md dc:accessRights ?rightsStatement .
+                ?rightsStatement rdfs:label ?other_constraints } .
+           }""")
+
+    result += "\n[identification]\n"
+
+    for row in qres:
+        if row['title'] is not None:
+            result += "title=%s\n" % row['title']  # title_nl?
+
+        if row['alternativeTitle'] is not None:
+            result += "alternative_title=%s\n" % row['alternativeTitle']
+
+        if row['abstract'] is not None:
+            result += "abstract=%s\n" % row['abstract']
+
+        if row['creation_date'] is not None:
+            result += "creation_date=%s\n" % row['creation_date']
+
+        if row['publication_date'] is not None:
+            result += "publication_date=%s\n" % row['publication_date']
+
+        if row['revision_date'] is not None:
+            result += "revision_date=%s\n" % row['revision_date']
+
+        if row['temporal_begin'] is not None:
+            result += "temporal_begin=%s\n" % row['temporal_begin']
+
+        if row['temporal_end'] is not None:
+            result += "temporal_end=%s\n" % row['temporal_end']
+
+        if row['topicCategory'] is not None:
+            result += "topiccategory=%s\n" % row['topicCategory'][
+                                             len("http://inspire.ec.europa.eu/metadata-codelist/TopicCategory/"):]
+
+        if row['status'] is not None:
+            result += "status=%s\n" % row['status'][len("http://purl.org/adms/status/"):]
+
+        if row['url'] is not None:
+            result += "url=%s\n" % row['url']  # include language tag?
+
+        if row['other_constraints'] is not None:
+            result += "otherconstraints=%s\n" % row['other_constraints']  # include language tag?
+
+        if row['maintenance_frequency'] is not None:
+            maintenance_frequency = row['maintenance_frequency'][len(
+                'http://inspire.ec.europa.eu/metadata-codelist/MaintenanceFrequencyCode/'):].lower()
+
+            if maintenance_frequency == "continuous":
+                maintenance_frequency = "continual"
+            elif maintenance_frequency == "daily":
+                maintenance_frequency = "daily"
+            elif maintenance_frequency == "weekly":
+                maintenance_frequency = "weekly"
+            elif maintenance_frequency == "monthly":
+                maintenance_frequency = "monthly"
+            elif maintenance_frequency == "biweekly":
+                maintenance_frequency = "fortnightly"
+            elif maintenance_frequency == "semiannual":
+                maintenance_frequency = "biannually"
+            elif maintenance_frequency == "annual":
+                maintenance_frequency = "annually"
+            elif maintenance_frequency == "notplanned":
+                maintenance_frequency = "notPlanned"
+            elif maintenance_frequency == "asneeded":
+                maintenance_frequency = "asNeeded"
+            else:
+                maintenance_frequency = "irregular"
+
+            result += "maintenancefrequency=%s\n" % maintenance_frequency
+
+    qres = g.query(
+        PREFIXES +
+        """SELECT DISTINCT *
+           WHERE {
+              OPTIONAL {
+                  ?md dcat:theme ?theme .
+                  ?theme skos:prefLabel ?keyword } .
+              OPTIONAL { ?md dc11:subject ?keywordNoCat } .
+              OPTIONAL {
+                  ?theme skos:inScheme ?scheme .
+                  ?scheme a skos:ConceptScheme ;
+                         dc:title ?scheme_title ;
+                         dc:issued ?scheme_issued } .
+              OPTIONAL { ?scheme dc:type ?scheme_type } .
+           }""")
+
+    keywords = {}
+    keywords_noCategory = set()
+    issued = {}
+    language = {}
+
+    for row in qres:
+        if row['keywordNoCat'] is not None:
+            keywords_noCategory.add(row['keywordNoCat'])
+
+        if row['theme'] is not None:
+            if row['scheme_title'] not in keywords.keys():
+                keywords[row['scheme_title']] = []
+            keywords[row['scheme_title']].append(row['keyword'])
+            issued[row['scheme_title']] = row['scheme_issued']
+            language[row['scheme_title']] = row['keyword'].language
+
+    if len(keywords_noCategory) > 0:
+        result += 'keywords_%s=%s\n' % (list(keywords_noCategory)[0].language, ','.join(keywords_noCategory))  # keywords_nl?
+
+    if len(keywords.keys()) > 0:
+        result += 'thesauri=%s\n' % '\/'.join(keywords.keys())
+
+    for thesaurus in keywords.keys():
+        result += '\n[%s]\n' % thesaurus
+        result += 'keywords_%s=%s\n' % (language[thesaurus], ','.join(keywords[thesaurus]))  # keywords_nl?
+        result += 'issued=%s\n' % issued[thesaurus]
+        if row['scheme_type'] is not None:
+            result += 'keywords_type=%s\n' % row['scheme_type']
+
+    return result

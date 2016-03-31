@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 {% import 'common/iso19139-charstring.j2' as cs %}
-<gmd:MD_Metadata xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd http://www.isotc211.org/2005/gmx http://www.isotc211.org/2005/gmx/gmx.xsd">
+<gmd:MD_Metadata xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd http://www.isotc211.org/2005/gmx http://www.isotc211.org/2005/gmx/gmx.xsd">
   <gmd:fileIdentifier>
     <gco:CharacterString>{{ record['metadata']['identifier'] }}</gco:CharacterString>
   </gmd:fileIdentifier>
@@ -129,7 +129,11 @@
     </gmd:MD_ReferenceSystem>
   </gmd:referenceSystemInfo>
   <gmd:identificationInfo>
+    {% if record['metadata']['hierarchyLevel'] == 'service' %}
+    <srv:SV_ServiceIdentification>
+    {% else %}
     <gmd:MD_DataIdentification>
+    {% endif }
       <gmd:citation>
         <gmd:CI_Citation>
           {{ cs.get_freetext('title', record['metadata']['language_alternate'], get_charstring('title', record['identification'], record['metadata']['language'], record['metadata']['language_alternate'])) }}
@@ -293,7 +297,16 @@
       {% if record['identification']['url'] %}
       {{ cs.get_freetext('supplementalInformation', record['metadata']['language_alternate'], get_charstring('url', record['identification'], record['metadata']['language'], record['metadata']['language_alternate'])) }}
       {% endif %}
+    {% if record['metadata']['hierarchyLevel'] == 'service' %}
+       {% if record['metadata']['spatialdataservicetype'] %}
+       <srv:serviceType>
+           <gco:LocalName>{{ record['metadata']['spatialdataservicetype'] }}</gco:LocalName>
+       </srv:serviceType>
+       {% endif %}
+    </srv:SV_ServiceIdentification>
+    {% else %}
     </gmd:MD_DataIdentification>
+    {% endif }
   </gmd:identificationInfo>
   <gmd:distributionInfo>
     <gmd:MD_Distribution>
