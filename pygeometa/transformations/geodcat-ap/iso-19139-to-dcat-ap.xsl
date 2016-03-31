@@ -1152,6 +1152,9 @@
             <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Fax"/>
            </vcard:hasTelephone>
         </xsl:for-each>
+        <xsl:for-each select="gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL">
+           <vcard:hasUrl rdf:resource="{.}"/>
+        </xsl:for-each>
         <xsl:for-each select="gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address">
           <vcard:hasAddress rdf:parseType="Resource">
           <vcard:street-address>
@@ -1188,6 +1191,37 @@
         <vcard:organization-name xml:lang="{$MetadataLanguage}">
           <xsl:value-of select="$OrganisationName"/>
         </vcard:organization-name>
+        <xsl:for-each select="gmd:contactInfo/gmd:CI_Contact/gmd:phone/gmd:CI_Telephone/gmd:voice/gco:CharacterString">
+           <vcard:hasTelephone rdf:parseType="Resource">
+            <vcard:hasValue rdf:resource="tel:{.}"/>
+            <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Voice"/>
+           </vcard:hasTelephone>
+        </xsl:for-each>
+        <xsl:for-each select="gmd:contactInfo/gmd:CI_Contact/gmd:phone/gmd:CI_Telephone/gmd:facsimile/gco:CharacterString">
+           <vcard:hasTelephone rdf:parseType="Resource">
+            <vcard:hasValue rdf:resource="tel:{.}"/>
+            <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Fax"/>
+           </vcard:hasTelephone>
+        </xsl:for-each>
+        <xsl:for-each select="gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL">
+           <vcard:hasUrl rdf:resource="{.}"/>
+        </xsl:for-each>
+        <xsl:for-each select="gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address">
+          <vcard:hasAddress rdf:parseType="Resource">
+          <vcard:street-address>
+            <xsl:value-of select="gmd:deliveryPoint/gco:CharacterString"/>
+          </vcard:street-address>
+          <vcard:locality>
+            <xsl:value-of select="gmd:city/gco:CharacterString"/>
+          </vcard:locality>
+          <vcard:postal-code>
+            <xsl:value-of select="gmd:postalCode/gco:CharacterString"/>
+          </vcard:postal-code>
+          <vcard:country-name>
+              <xsl:value-of select="gmd:country/gco:CharacterString"/>
+          </vcard:country-name>
+        </vcard:hasAddress>
+        </xsl:for-each>
         <xsl:for-each select="gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString">
           <vcard:hasEmail rdf:resource="mailto:{.}"/>
         </xsl:for-each>
@@ -1301,11 +1335,54 @@
     <xsl:param name="OrganisationName">
       <xsl:value-of select="gmd:organisationName/gco:CharacterString"/>
     </xsl:param>
+        <xsl:param name="PositionName">
+      <xsl:value-of select="gmd:positionName/gco:CharacterString"/>
+    </xsl:param>
+    <xsl:param name="IndividualName">
+      <xsl:value-of select="gmd:individualName/gco:CharacterString"/>
+    </xsl:param>
     <xsl:param name="ResponsibleParty">
       <vcard:Kind>
         <vcard:organization-name xml:lang="{$MetadataLanguage}">
           <xsl:value-of select="$OrganisationName"/>
         </vcard:organization-name>
+        <vcard:title xml:lang="{$MetadataLanguage}">
+          <xsl:value-of select="$PositionName"/>
+        </vcard:title>
+        <vcard:fn xml:lang="{$MetadataLanguage}">
+          <xsl:value-of select="$IndividualName"/>
+        </vcard:fn>
+        <xsl:for-each select="gmd:contactInfo/gmd:CI_Contact/gmd:phone/gmd:CI_Telephone/gmd:voice/gco:CharacterString">
+           <vcard:hasTelephone rdf:parseType="Resource">
+            <vcard:hasValue rdf:resource="tel:{.}"/>
+            <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Voice"/>
+           </vcard:hasTelephone>
+        </xsl:for-each>
+        <xsl:for-each select="gmd:contactInfo/gmd:CI_Contact/gmd:phone/gmd:CI_Telephone/gmd:facsimile/gco:CharacterString">
+           <vcard:hasTelephone rdf:parseType="Resource">
+            <vcard:hasValue rdf:resource="tel:{.}"/>
+            <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Fax"/>
+           </vcard:hasTelephone>
+        </xsl:for-each>
+        <xsl:for-each select="gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL">
+           <vcard:hasUrl rdf:resource="{.}"/>
+        </xsl:for-each>
+        <xsl:for-each select="gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address">
+          <vcard:hasAddress rdf:parseType="Resource">
+          <vcard:street-address>
+            <xsl:value-of select="gmd:deliveryPoint/gco:CharacterString"/>
+          </vcard:street-address>
+          <vcard:locality>
+            <xsl:value-of select="gmd:city/gco:CharacterString"/>
+          </vcard:locality>
+          <vcard:postal-code>
+            <xsl:value-of select="gmd:postalCode/gco:CharacterString"/>
+          </vcard:postal-code>
+          <vcard:country-name>
+              <xsl:value-of select="gmd:country/gco:CharacterString"/>
+          </vcard:country-name>
+        </vcard:hasAddress>
+        </xsl:for-each>
         <xsl:for-each select="gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString">
           <vcard:hasEmail rdf:resource="mailto:{.}"/>
         </xsl:for-each>
