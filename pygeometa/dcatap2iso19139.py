@@ -1,6 +1,7 @@
 import rdflib
 import os
 import re
+import json
 
 PREFIXES = """prefix foaf: <http://xmlns.com/foaf/0.1/>
 prefix dc: <http://purl.org/dc/terms/>
@@ -236,5 +237,57 @@ def convert(rdf):
         result += 'issued=%s\n' % issued[thesaurus]
         if row['scheme_type'] is not None:
             result += 'keywords_type=%s\n' % row['scheme_type']
+
+    qres = g.query(
+        PREFIXES +
+        """SELECT DISTINCT *
+           WHERE {
+              OPTIONAL { ?md adms:representationTechnique ?datatype } .
+              OPTIONAL {
+                ?md dc:conformsTo ?crsr .
+                ?crsr dc:type <http://inspire.ec.europa.eu/glossary/SpatialReferenceSystem> ;
+                      skos:inScheme ?crss .
+                ?crss dc:title ?crst .
+              } .
+              OPTIONAL {
+                ?md dc:conformsTo ?crsr .
+                { ?crsr skos:prefLabel ?crsl } UNION { ?crsr dc:identifier ?crsl } .
+              } .
+              OPTIONAL { ?md dc:conformsTo ?crsu . FILTER(isURI(?crsu)) } .
+              OPTIONAL {
+                ?md dc:spatial ?spatial .
+                ?spatial locn:geometry ?geometry } .
+           }""")
+
+    result += '\n[spatial]\n'
+
+    geometries = set()
+    for row in qres:
+        if row['datatype'] is not None:
+            result += 'datatype=%s\n' % row['datatype'][row['datatype'].rfind('/')+1:]
+
+        if "crs=" not in result:
+            if row['crsl'] is not None:
+                result += 'crs=%s\n' % row['crsl']
+                if row['crst'] is not None:
+                    result += 'crst=%s\n' % row['crst']
+
+            elif row['crsu'] is not None:
+                result += 'crs=%s\n' % row['crsu']
+
+        if row['geometry'] is not None:
+            geometries.add(row['geometry'])
+
+    print(geometries)
+    for geometry in geometries:
+        if "JSON" in geometry.datatype.upper():  # TODO: support for other formats as well
+            geometry_json = str(geometry)
+            geometry_obj = json.loads(geometry_json)
+            x = set()
+            y = set()
+            for coordinate in geometry_obj['coordinates'][0]:
+                x.add(coordinate[0])
+                y.add(coordinate[1])
+            result += "bbox=%s\n" % ",".join([str(min(x)), str(min(y)), str(max(x)), str(max(y))])
 
     return result
