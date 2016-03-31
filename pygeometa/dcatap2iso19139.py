@@ -290,7 +290,7 @@ def convert(rdf):
                 y.add(coordinate[1])
             result += "bbox=%s\n" % ",".join([str(min(x)), str(min(y)), str(max(x)), str(max(y))])
 
-    def extract_contact( role, category):
+    def extract_contact(g, role, category):
         res = ""
 
         qr = g.query(
@@ -299,42 +299,54 @@ def convert(rdf):
                WHERE {
                   ?agent dc:type <http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/%s> .
                   ?agent prov:agent ?pointOfContact .
-                  ?pointOfContact ?vcard:organization-name ?organization .
-                  ?pointOfContact ?vcard:hasEmail ?email .
-                  OPTIONAL { ?pointOfContact ?vcard:hasUrl ?url } .
-                  OPTIONAL { ?pointOfContact ?vcard:title ?title } .
-                  OPTIONAL { ?pointOfContact ?vcard:fn ?name } .
+                  ?pointOfContact vcard:organization-name ?organization .
+                  ?pointOfContact vcard:hasEmail ?email .
+                  OPTIONAL { ?pointOfContact vcard:hasUrl ?url } .
+                  OPTIONAL { ?pointOfContact vcard:title ?title } .
+                  OPTIONAL { ?pointOfContact vcard:fn ?name } .
                   OPTIONAL {
-                    ?pointOfContact ?vcard:hasTelephone ?tel .
+                    ?pointOfContact vcard:hasTelephone ?tel .
                     ?tel vcard:hasValue ?phone .
                     ?tel a vcard:Voice } .
                   OPTIONAL {
-                    ?pointOfContact ?vcard:hasTelephone ?fax .
+                    ?pointOfContact vcard:hasTelephone ?fax .
                     ?fax vcard:hasValue ?faxno .
                     ?fax a vcard:Fax } .
+                  OPTIONAL {
+                    ?pointOfContact vcard:hasAddress ?address .
+                    ?address vcard:street-address ?street .
+                    ?address vcard:locality ?city .
+                    ?address vcard:postal-code ?postalcode .
+                    ?address vcard:country-name ?country .
+                  } .
                } LIMIT 1""" % role)
 
         res += '\n[contact:%s]\n' % category
 
         for r in qr:
-            if row['organization'] is not None:
+            if r['organization'] is not None:
                 res += "organization_%s=%s\n" % (r['organization'].language, r['organization'])
-            if row['e-mail'] is not None:
-                res += "url=%s\n" % r['e-mail'][len('mailto:'):]
-            if row['url'] is not None:
+            if r['email'] is not None:
+                res += "email=%s\n" % r['email'][len('mailto:'):]
+            if r['url'] is not None:
                 res += "url=%s\n" % r['url']
-            if row['title'] is not None:
+            if r['title'] is not None:
                 res += "positionname=%s\n" % r['title']
-            if row['name'] is not None:
+            if r['name'] is not None:
                 res += "individualname=%s\n" % r['name']
-            if row['phone'] is not None:
+            if r['phone'] is not None:
                 res += "phone=%s\n" % r['phone'][len('tel:'):]
-            if row['faxno'] is not None:
+            if r['faxno'] is not None:
                 res += "fax=%s\n" % r['faxno'][len('tel:'):]
+            if r['address'] is not None:
+                res += "address=%s\n" % r['street']
+                res += "city=%s\n" % r['city']
+                res += "postalcode=%s\n" % r['postalcode']
+                res += "country=%s\n" % r['country']
 
         return res
 
-    result += extract_contact('pointOfContact','main')
+    result += extract_contact(g, 'pointOfContact', 'main')
 
     return result
 
