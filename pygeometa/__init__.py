@@ -86,6 +86,7 @@ prefix geo: <https://www.iana.org/assignments/media-types/application/vnd.geo+>
 prefix schema: <http://schema.org/>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix adms: <http://www.w3.org/ns/adms#>
+prefix iso: <http://def.seegrid.csiro.au/isotc211/iso19115/2003/metadata#>
 
 """
 
@@ -338,6 +339,7 @@ def dcat_to_iso(rdf, schema=None, schema_local=None):
               OPTIONAL { ?md dc:issued ?publication_date } .
               OPTIONAL { ?md adms:status ?status } .
               OPTIONAL { ?md dct:accrualPeriodicity ?maintenance_frequency } .
+              OPTIONAL { ?md iso:supplementalInformation ?url } .
            } LIMIT 1""")
 
     result += "\n[identification]\n"
@@ -373,9 +375,12 @@ def dcat_to_iso(rdf, schema=None, schema_local=None):
         if row['status'] is not None:
             result += "status=%s\n" % row['status'][len("http://purl.org/adms/status/"):]
 
+        if row['url'] is not None:
+            result += "url=%s\n" % row['url']  # include language tag?
+
         if row['maintenance_frequency'] is not None:
             maintenance_frequency = row['maintenance_frequency'][len('http://inspire.ec.europa.eu/metadata-codelist/MaintenanceFrequencyCode/'):].lower()
-            print(maintenance_frequency)
+
             if maintenance_frequency == "continuous":
                 maintenance_frequency = "continual"
             elif maintenance_frequency == "daily":
@@ -398,6 +403,43 @@ def dcat_to_iso(rdf, schema=None, schema_local=None):
                 maintenance_frequency = "irregular"
 
             result += "maintenancefrequency=%s\n" % maintenance_frequency
+
+    qres = g.query(
+        PREFIXES +
+        """SELECT DISTINCT *
+           WHERE {
+              ?md dcat:theme ?theme .
+              ?theme skos:prefLabel ?keyword .
+              OPTIONAL {
+                  ?theme skos:inScheme ?scheme .
+                  ?scheme a skos:ConceptScheme ;
+                         dc:title ?scheme_title ;
+                         dc:issued ?scheme_issued } .
+              OPTIONAL { ?scheme dc:type ?scheme_type }
+           }""")
+
+    keywords = {}
+    issued = {}
+    language = {}
+
+    for row in qres:
+        if row['theme'] is not None:
+            if row['scheme_title'] not in keywords.keys():
+                keywords[row['scheme_title']] = []
+            keywords[row['scheme_title']].append(row['keyword'])
+            issued[row['scheme_title']] = row['scheme_issued']
+            language[row['scheme_title']] = row['keyword'].language
+    print(keywords)
+
+    result += 'thesauri=%s\n' % '\/'.join(keywords.keys())
+
+    for thesaurus in keywords.keys():
+        result += '\n[%s]\n' % thesaurus
+        result += 'keywords_%s=%s\n' % (language[thesaurus], ','.join(keywords[thesaurus]))  # keywords_nl?
+        result += 'issued=%s\n' % issued[thesaurus]
+        if row['scheme_type'] is not None:
+            result += 'keywords_type=%s\n' % row['scheme_type']
+
     print(result)
     return None
 

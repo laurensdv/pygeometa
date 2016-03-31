@@ -53,6 +53,7 @@
     xmlns:skos   = "http://www.w3.org/2004/02/skos/core#"
     xmlns:cnt    = "http://www.w3.org/2011/content#"
     xmlns:dc     = "http://purl.org/dc/elements/1.1/"
+    xmlns:iso    = "http://def.seegrid.csiro.au/isotc211/iso19115/2003/metadata#"
     xmlns:dct    = "http://purl.org/dc/terms/"
     xmlns:dctype = "http://purl.org/dc/dcmitype/"
     xmlns:earl   = "http://www.w3.org/ns/earl#"
@@ -530,6 +531,10 @@
       <xsl:value-of select="gmd:identificationInfo[1]/*/gmd:abstract/gco:CharacterString"/>
     </xsl:param>
 
+    <xsl:param name="SupplementalInformation">
+      <xsl:value-of select="gmd:identificationInfo[1]/*/gmd:supplementalInformation/gco:CharacterString"/>
+    </xsl:param>
+
     <xsl:param name="Lineage">
       <xsl:value-of select="gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement/gco:CharacterString"/>
     </xsl:param>
@@ -828,6 +833,9 @@
       <dct:description xml:lang="{$MetadataLanguage}">
         <xsl:value-of select="normalize-space($ResourceAbstract)"/>
       </dct:description>
+      <iso:supplementalInformation xml:lang="{$MetadataLanguage}">
+        <xsl:value-of select="normalize-space($SupplementalInformation)"/>
+      </iso:supplementalInformation>
 <!-- Maintenance information (tentative) -->
       <xsl:for-each select="gmd:identificationInfo/*/gmd:resourceMaintenance">
         <xsl:apply-templates select="gmd:MD_MaintenanceInformation/gmd:maintenanceAndUpdateFrequency/gmd:MD_MaintenanceFrequencyCode"/>
