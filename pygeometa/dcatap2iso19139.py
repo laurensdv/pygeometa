@@ -1,3 +1,8 @@
+# =================================================================
+# Copyrighted 2016 by Laurens De Vocht - iMinds - UGent
+# All rights reserved
+# =================================================================
+
 import rdflib
 import os
 import re
