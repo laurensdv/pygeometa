@@ -89,6 +89,15 @@
             </gmd:MD_Resolution>
    </gmd:spatialResolution>
   {% endif %}
+  {% if record['spatial']['resolution_d'] and record['spatial']['resolution_d_m'] %}
+  <gmd:spatialResolution>
+    <gmd:MD_Resolution>
+    <gmd:distance>
+    <gco:Distance uom="{{ record['spatial']['resolution_d_m'] }}">{{ record['spatial']['resolution_d'] }}</gco:Distance>
+    </gmd:distance>
+    </gmd:MD_Resolution>
+  </gmd:spatialResolution>
+  {% endif %}
   {% if record['spatial']['crs'] %}
   <gmd:referenceSystemInfo>
     <gmd:MD_ReferenceSystem>
@@ -102,9 +111,11 @@
              <gco:CharacterString>{{ record['spatial']['crst'] }}</gco:CharacterString>
           </gmd:codeSpace>
           {% endif %}
+          {% if record['spatial']['crst'] == 'EPSG' %}
           <gmd:version>
             <gco:CharacterString>6.18.3</gco:CharacterString>
           </gmd:version>
+          {% endif %}
         </gmd:RS_Identifier>
       </gmd:referenceSystemIdentifier>
     </gmd:MD_ReferenceSystem>

@@ -306,6 +306,13 @@ def convert(rdf):
         if match:
             result += 'resolution=%s\n' % comment[match.start()+2:match.end()]
 
+        p = re.compile(r'[0-9.,]+')
+        match = re.search(p, comment)
+        if match:
+            result += 'resolution_d=%s\n' % comment[match.start():match.end()]
+            result += 'resolution_d_m=%s\n' % comment[match.end():]
+
+
     for geometry in geometries:
         if "JSON" in geometry.datatype.upper():  # TODO: support for other formats as well
             geometry_json = str(geometry)
