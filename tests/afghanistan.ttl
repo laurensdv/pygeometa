@@ -1,0 +1,44 @@
+@prefix adms: <http://www.w3.org/ns/adms#> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix gsp: <http://www.opengis.net/ont/geosparql#> .
+@prefix locn: <http://www.w3.org/ns/locn#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <http://schema.org/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix time: <http://www.w3.org/2006/time> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://demo.ckan.org/dataset/3d024d55-5cd9-4593-81cf-7ec9fec949a8> a dcat:Dataset ;
+    dct:description """### About\r
+\r
+From website:\r
+\r
+> Welcome to AfghanistanElectionData.org. This website, created by the National Democratic Institute (NDI) in partnership with Development Seed, a Washington, D.C.-based online communications consultancy, is designed to make data from the August 20, 2009, Afghanistan presidential election accessible and transparent. The reports below provide examples of the analysis that this website facilitates.\r
+\r
+We have provided one sample csv file as there is no download for the whole dataset. There are many more files on the website.""" ;
+    dct:identifier "3d024d55-5cd9-4593-81cf-7ec9fec949a8" ;
+    dct:issued "2015-07-22T14:30:14.826171"^^xsd:dateTime ;
+    dct:modified "2015-07-27T17:21:16.436779"^^xsd:dateTime ;
+    dct:spatial [ a dct:Location ;
+            skos:prefLabel "Afghanistan" ;
+            locn:geometry "POLYGON ((74.8988 29.3942, 74.8988 38.4530, 60.5053 38.4530, 60.5053 29.3942, 74.8988 29.3942))"^^gsp:wktLiteral,
+                "{ \"type\": \"Polygon\", \"coordinates\": [ [ [74.898827, 29.394159],[74.898827, 38.453041], [60.50526, 38.453041], [60.50526, 29.394159], [74.898827, 29.394159] ] ] }"^^<https://www.iana.org/assignments/media-types/application/vnd.geo+json> ] ;
+    dct:title "Afghanistan Election Districts" ;
+    dcat:distribution <http://demo.ckan.org/dataset/3d024d55-5cd9-4593-81cf-7ec9fec949a8/resource/f6331f99-51f6-44d9-95b9-b20f3b74f360> ;
+    dcat:keyword "country-afghanistan",
+        "election",
+        "politics",
+        "poll",
+        "transparency" ;
+    dcat:landingPage "http://afghanistanelectiondata.org/" .
+
+<http://demo.ckan.org/dataset/3d024d55-5cd9-4593-81cf-7ec9fec949a8/resource/f6331f99-51f6-44d9-95b9-b20f3b74f360> a dcat:Distribution ;
+    dct:description "District Names" ;
+    dct:format "CSV" ;
+    dcat:accessURL "http://afghanistanelectiondata.org/sites/default/files/district_centerpoints.csv" .

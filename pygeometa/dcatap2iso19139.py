@@ -40,7 +40,7 @@ def convert(rdf):
               dc:modified ?datestamp ;
               dc:source ?source .
               ?source content:characterEncoding ?charset .
-              OPTIONAL { ?a dc:hasParent ?parent } .
+              OPTIONAL { ?a dc:isPartOf ?parent } .
               OPTIONAL { ?source dc:conformsTo ?c } .
               OPTIONAL { ?c dc:title ?metadatastandardname } .
               OPTIONAL { ?c owl:versionInfo ?metadatastandardversion } .
@@ -54,7 +54,7 @@ def convert(rdf):
         if row['identifier'] is not None:
             result += "identifier=%s\n" % row['identifier']
         if row['parent'] is not None:
-            result += "parent=%s\n" % row['parent']
+            result += "parentidentifier=%s\n" % row['parent']
         if row['charset'] is not None:
             result += "charset=%s\n" % re.sub(r'\W+', '', row['charset'].lower())
         if row['datestamp'] is not None:
@@ -107,6 +107,7 @@ def convert(rdf):
               ?md foaf:isPrimaryTopicOf ?a ;
                   dc:description ?abstract ;
                   dc:title ?title .
+              OPTIONAL { ?md dc:language ?language } .
               OPTIONAL { ?md dc:subject ?topicCategory } .
               OPTIONAL {
                   ?md dc:temporal ?temporal .
@@ -136,6 +137,9 @@ def convert(rdf):
 
         if row['abstract'] is not None:
             result += "abstract=%s\n" % row['abstract'] # row['abstract'].language
+
+        if row['language'] is not None:
+            result += "language=%s\n" % (row['language'][-3:].lower())
 
         if row['creation_date'] is not None:
             result += "creation_date=%s\n" % row['creation_date']
@@ -247,7 +251,8 @@ def convert(rdf):
         PREFIXES +
         """SELECT DISTINCT *
            WHERE {
-              OPTIONAL { ?md adms:representationTechnique ?datatype } .
+              OPTIONAL { ?md rdfs:comment ?comment } .
+              OPTIONAL { ?d adms:representationTechnique ?datatype } .
               OPTIONAL {
                 ?md dc:conformsTo ?crsr .
                 ?crsr dc:type <http://inspire.ec.europa.eu/glossary/SpatialReferenceSystem> ;
@@ -267,9 +272,11 @@ def convert(rdf):
     result += '\n[spatial]\n'
 
     geometries = set()
+    comments = set()
+
     for row in qres:
-        if row['datatype'] is not None:
-            result += 'datatype=%s\n' % row['datatype'][row['datatype'].rfind('/')+1:]
+        if row['datatype'] is not None and 'datatype' not in result:
+            result += 'datatype=%s\n' % row['datatype'][row['datatype'].rfind('/')+1:]  # What if there are multiple datatypes: i.e. multiple distributions - different datatypes?
 
         if "crs=" not in result:
             if row['crsl'] is not None:
@@ -284,6 +291,15 @@ def convert(rdf):
 
         if row['geometry'] is not None:
             geometries.add(row['geometry'])
+
+        if row['comment'] is not None:
+            comments.add(row['comment'])
+
+    for comment in comments:
+        p = re.compile(r'1:[0-9]+')
+        match = re.search(p, comment)
+        if match:
+            result += 'resolution=%s\n' % comment[match.start()+2:match.end()]
 
     for geometry in geometries:
         if "JSON" in geometry.datatype.upper():  # TODO: support for other formats as well
@@ -360,7 +376,7 @@ def convert(rdf):
         PREFIXES +
         """SELECT DISTINCT *
            WHERE {
-              ?md dcat:landingPage ?url .
+              { ?md foaf:homepage ?url } UNION { ?md dcat:landingPage ?url } .
               ?url a foaf:Document .
               OPTIONAL { ?url dc:title ?title } .
               OPTIONAL { ?url dc:description ?description } .
@@ -381,5 +397,30 @@ def convert(rdf):
             result += "name=%s\n" % landing_pages[landing_page]['title']  # landing_pages[landing_page]['title'].language
         if landing_pages[landing_page]['description'] is not None:
             result += "description=%s\n" % landing_pages[landing_page]['description']  # landing_pages[landing_page]['description'].language
+
+    qres = g.query(
+        PREFIXES +
+        """SELECT DISTINCT *
+           WHERE {
+              ?distribution a dcat:Distribution .
+              OPTIONAL { ?distribution dc:title ?title } .
+              OPTIONAL { ?distribution dc:description ?description } .
+              OPTIONAL { ?distribution dc:format ?format } .
+              ?distribution dc:accessURL ?accessURL .
+           }""")
+
+    distributions = {}
+
+    for row in qres:
+        distributions[row['distribution']] = {'title': row['title'], 'description': row['description'], 'url': row['accessURL']}
+
+    for distribution in distributions.keys():
+        i += 1
+        result += "\n[distribution:%s]\n" % distribution
+        result += "url=%s\n" % distribution[distribution]['url']
+        if distributions[distribution]['title'] is not None:
+            result += "name=%s\n" % distributions[distribution]['title']  # languages?
+        if distributions[distribution]['description'] is not None:
+            result += "description=%s\n" % distributions[distribution]['description']  # languages?
 
     return result

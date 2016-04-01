@@ -929,6 +929,10 @@
       <xsl:if test="$profile = $extended">
         <xsl:apply-templates select="gmd:identificationInfo/*/gmd:spatialResolution/gmd:MD_Resolution"/>
       </xsl:if>
+<!-- Spatial representation -->
+       <xsl:if test="$profile = $extended">
+         <xsl:apply-templates select="gmd:identificationInfo/*/gmd:spatialRepresentationType/gmd:MD_SpatialRepresentationTypeCode"/>
+       </xsl:if>
 <!-- Conformity -->
       <xsl:apply-templates select="gmd:dataQualityInfo/*/gmd:report/*/gmd:result/*/gmd:specification/gmd:CI_Citation">
         <xsl:with-param name="ResourceUri" select="$ResourceUri"/>
@@ -2013,6 +2017,7 @@
     </xsl:for-each>
   </xsl:template>
 
+
 <!-- Character encoding -->
 
   <xsl:template name="CharacterEncoding" match="gmd:characterSet/gmd:MD_CharacterSetCode">
@@ -2349,7 +2354,12 @@
     </xsl:choose>
   </xsl:template>
 
-<!-- Spatial representation type (tentative) -->
+<!--
+
+  Spatial representation type (tentative)
+  =======================================
+
+-->
 
   <xsl:template name="SpatialRepresentationType" match="gmd:identificationInfo/*/gmd:spatialRepresentationType/gmd:MD_SpatialRepresentationTypeCode">
     <adms:representationTechnique rdf:resource="{$SpatialRepresentationTypeCodelistUri}/{@codeListValue}"/>
