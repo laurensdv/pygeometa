@@ -129,6 +129,14 @@ def convert(rdf):
               OPTIONAL {
                 ?md dc:accessRights ?rightsStatement .
                 ?rightsStatement rdfs:label ?other_constraints } .
+              OPTIONAL {
+                ?md dc:license ?license .
+                ?license rdfs:label ?limitation } .
+              OPTIONAL {
+                ?md dc:license ?licenseUrl .
+                FILTER isBlank(?licenseUrl).
+                FILTER isUri(?licenseUrl).
+              }
            }""")
 
     result += "\n[identification]\n"
@@ -170,6 +178,12 @@ def convert(rdf):
 
         if row['url'] is not None:
             result += "url=%s\n" % row['url']  # include language tag? row['url'].language
+
+        if row['limitation'] is not None:
+            result += "limitation=%s\n" % row['limitation']  # include language tag?
+
+        if row['licenseUrl'] is not None:
+            result += "license=%s\n" % row['licenseUrl']
 
         if row['other_constraints'] is not None:
             result += "otherconstraints=%s\n" % row['other_constraints']  # include language tag?
@@ -305,12 +319,12 @@ def convert(rdf):
         match = re.search(p, comment)
         if match:
             result += 'resolution=%s\n' % comment[match.start()+2:match.end()]
-
-        p = re.compile(r'[0-9.,]+')
-        match = re.search(p, comment)
-        if match:
-            result += 'resolution_d=%s\n' % comment[match.start():match.end()]
-            result += 'resolution_d_m=%s\n' % comment[match.end():]
+        else:
+            p = re.compile(r'[0-9.,]+')
+            match = re.search(p, comment)
+            if match:
+                result += 'resolution_d=%s\n' % comment[match.start():match.end()]
+                result += 'resolution_d_m=%s\n' % comment[match.end():]
 
 
     for geometry in geometries:
@@ -389,7 +403,7 @@ def convert(rdf):
         """SELECT DISTINCT *
            WHERE {
               { ?md foaf:homepage ?url } UNION { ?md dcat:landingPage ?url } .
-              ?url a foaf:Document .
+              OPTIONAL { ?url a foaf:Document } .
               OPTIONAL { ?url dc:title ?title } .
               OPTIONAL { ?url dc:description ?description } .
            }""")
@@ -418,18 +432,25 @@ def convert(rdf):
               OPTIONAL { ?distribution dc:title ?title } .
               OPTIONAL { ?distribution dc:description ?description } .
               OPTIONAL { ?distribution dc:format ?format } .
-              ?distribution dc:accessURL ?accessURL .
+              OPTIONAL { ?distribution dc:accessURL ?accessURL } .
+              OPTIONAL { ?distribution foaf:page ?page } .
            }""")
 
     distributions = {}
 
     for row in qres:
-        distributions[row['distribution']] = {'title': row['title'], 'description': row['description'], 'url': row['accessURL']}
+        distributions[row['distribution']] = {'title': row['title'], 'description': row['description'], 'url': row['accessURL'], 'page': row['page']}
 
     for distribution in distributions.keys():
         i += 1
         result += "\n[distribution:%s]\n" % distribution
-        result += "url=%s\n" % distribution[distribution]['url']
+        if distributions[distribution]['url'] is not None:
+            result += "url=%s\n" % distribution[distribution]['url']
+            result += "function=%s\n" % 'download'
+        elif distributions[distribution]['page'] is not None:
+            result += "url=%s\n" % distribution[distribution]['page']
+            result += "function=%s\n" % 'information'
+
         if distributions[distribution]['title'] is not None:
             result += "name=%s\n" % distributions[distribution]['title']  # languages?
         if distributions[distribution]['description'] is not None:

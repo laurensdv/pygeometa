@@ -209,14 +209,25 @@
       {% endfor %}
       <gmd:resourceConstraints>
         <gmd:MD_LegalConstraints>
+          {% if record['identification']['limitation'] %}
+              <gmd:useLimitation>
+                <gco:CharacterString>{{ if record['identification']['limitation'] }}</gco:CharacterString>
+              </gmd:useLimitation>
+          {% endif %}
+          {% if record['identification']['license'] %}
+              <gmd:useLimitation>
+              <gmx:Anchor xlink:href="{{ record['identification']['license'] }}"/>
+              </gmd:useLimitation>
+          {% endif %}
           {% if record['identification']['accessconstraints'] %}
-          <gmd:accessConstraints>
-            <gmd:MD_RestrictionCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_RestrictionCode" codeSpace="ISOTC211/19115" codeListValue="{{ record['identification']['accessconstraints'] }}">{{ record['identification']['accessconstraints'] }}</gmd:MD_RestrictionCode>
-          </gmd:accessConstraints>
+              <gmd:accessConstraints>
+                <gmd:MD_RestrictionCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_RestrictionCode" codeSpace="ISOTC211/19115" codeListValue="{{ record['identification']['accessconstraints'] }}">{{ record['identification']['accessconstraints'] }}</gmd:MD_RestrictionCode>
+              </gmd:accessConstraints>
           {% endif %}
           {% if record['identification']['otherconstraints'] %}
-          <gmd:otherConstraints>
-            <gco:CharacterString>{{ record['identification']['otherconstraints'] }}</gco:CharacterString>          </gmd:otherConstraints>
+              <gmd:otherConstraints>
+              <gco:CharacterString>{{ record['identification']['otherconstraints'] }}</gco:CharacterString>
+              </gmd:otherConstraints>
           {% endif %}
         </gmd:MD_LegalConstraints>
       </gmd:resourceConstraints>
