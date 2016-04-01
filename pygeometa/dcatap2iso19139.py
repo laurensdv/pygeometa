@@ -7,6 +7,7 @@ import rdflib
 import os
 import re
 import json
+import datetime
 
 PREFIXES = """prefix foaf: <http://xmlns.com/foaf/0.1/>
 prefix dc: <http://purl.org/dc/terms/>
@@ -31,7 +32,7 @@ prefix iso: <http://def.seegrid.csiro.au/isotc211/iso19115/2003/metadata#>
 
 def convert(rdf):
     g = rdflib.Graph()
-    g.parse(os.path.realpath(rdf))
+    g.parse(os.path.realpath(rdf), format=rdflib.util.guess_format(os.path.realpath(rdf)))
 
     result = ""
     qres = g.query(  # Mandatory -> required; Optional -> OPTIONAL
@@ -62,8 +63,34 @@ def convert(rdf):
             result += "parentidentifier=%s\n" % row['parent']
         if row['charset'] is not None:
             result += "charset=%s\n" % re.sub(r'\W+', '', row['charset'].lower())
+
         if row['datestamp'] is not None:
             result += "datestamp=%s\n" % row['datestamp']
+
+    # if no metadata provided create new metadata:
+    if len(qres) == 0:
+        qres = g.query(
+            PREFIXES +
+            """SELECT DISTINCT *
+               WHERE {
+                  { ?uri a dcat:Dataset } UNION { ?uri a dc:Service } .
+                  OPTIONAL { ?uri dct:identifier ?identifier } .
+                  OPTIONAL { ?uri dct:issued ?issued } .
+               } LIMIT 1""")
+
+        for row in qres:
+            if row['uri'] is not None:
+                if row['identifier'] is not None:
+                    result += "identifier=%s\n" % row['identifier']
+                else:
+                    result += "identifier=%s\n" % row['uri']
+
+                if row['issued'] is not None:
+                    result += "datestamp=%s\n" % row['issued']
+                else:
+                    result += "datestamp=%s\n" % datetime.datetime.now().isoformat()
+
+        result += "charset=%s\n" % 'utf8'
 
     qres = g.query(
         PREFIXES +
@@ -109,9 +136,10 @@ def convert(rdf):
         PREFIXES +
         """SELECT DISTINCT *
            WHERE {
-              ?md foaf:isPrimaryTopicOf ?a ;
-                  dc:description ?abstract ;
-                  dc:title ?title .
+              { ?md foaf:isPrimaryTopicOf ?a }
+              UNION { { ?md a dcat:Dataset } UNION { ?md a dc:Service } } .
+              ?md dc:description ?abstract .
+              ?md dc:title ?title .
               OPTIONAL { ?md dc:language ?language } .
               OPTIONAL { ?md dc:subject ?topicCategory } .
               OPTIONAL {
@@ -148,7 +176,7 @@ def convert(rdf):
             result += "alternative_title=%s\n" % row['alternativeTitle']  # row['alternativeTitle'].language
 
         if row['abstract'] is not None:
-            result += "abstract=%s\n" % row['abstract'] # row['abstract'].language
+            result += "abstract=%s\n" % row['abstract'].replace('\n', ' ').replace('\r', '')  # row['abstract'].language
 
         if row['language'] is not None:
             result += "language=%s\n" % (row['language'][-3:].lower())
@@ -222,6 +250,7 @@ def convert(rdf):
                   ?md dcat:theme ?theme .
                   ?theme skos:prefLabel ?keyword } .
               OPTIONAL { ?md dc11:subject ?keywordNoCat } .
+              OPTIONAL { ?md dcat:keyword ?keywordNoCat } .
               OPTIONAL {
                   ?theme skos:inScheme ?scheme .
                   ?scheme a skos:ConceptScheme ;
@@ -431,25 +460,27 @@ def convert(rdf):
               OPTIONAL { ?distribution dc:title ?title } .
               OPTIONAL { ?distribution dc:description ?description } .
               OPTIONAL { ?distribution dc:format ?format } .
-              OPTIONAL { ?distribution dc:accessURL ?accessURL } .
+              OPTIONAL { ?distribution dcat:accessURL ?accessURL } .
               OPTIONAL { ?distribution foaf:page ?page } .
            }""")
 
     distributions = {}
 
     for row in qres:
-        distributions[row['distribution']] = {'title': row['title'], 'description': row['description'], 'url': row['accessURL'], 'page': row['page']}
+        distributions[row['distribution']] = {'title': row['title'], 'format': row['format'], 'description': row['description'], 'url': row['accessURL'], 'page': row['page']}
 
     for distribution in distributions.keys():
         i += 1
         result += "\n[distribution:%s]\n" % distribution
         if distributions[distribution]['url'] is not None:
-            result += "url=%s\n" % distribution[distribution]['url']
+            result += "url=%s\n" % distributions[distribution]['url']
             result += "function=%s\n" % 'download'
         elif distributions[distribution]['page'] is not None:
-            result += "url=%s\n" % distribution[distribution]['page']
+            result += "url=%s\n" % distributions[distribution]['page']
             result += "function=%s\n" % 'information'
 
+        if distributions[distribution]['format'] is not None:
+            result += "format=%s\n" % distributions[distribution]['format']
         if distributions[distribution]['title'] is not None:
             result += "name=%s\n" % distributions[distribution]['title']  # languages?
         if distributions[distribution]['description'] is not None:

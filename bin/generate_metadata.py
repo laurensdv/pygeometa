@@ -70,7 +70,6 @@ SUPPORTED_SCHEMAS = get_supported_schemas()
               type=click.Path(exists=True, resolve_path=True,
                               dir_okay=True, file_okay=False),
               help='Locally defined metadata schema')
-
 def process_args(mcf, rdf, xml, schema, schema_local, output):
     if xml is not None and rdf is None:
         rdf_output = iso_to_dcat(xml, schema=schema, schema_local=schema_local)
@@ -84,9 +83,9 @@ def process_args(mcf, rdf, xml, schema, schema_local, output):
         xml_output = dcat_to_iso(rdf, schema=schema, schema_local=schema_local)
 
         if output is None:
-             click.echo_via_pager(xml_output)
+            click.echo_via_pager(xml_output)
         else:
-             output.write(xml_output)
+            output.write(xml_output)
 
     elif (rdf is None or xml is None) and mcf is None:
         raise click.UsageError('Missing arguments')

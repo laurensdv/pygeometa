@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/geopython/pygeometa.png)](https://travis-ci.org/geopython/pygeometa)
 
-# pygeometa
+# pygeometa [geodcat-ap mod]
 
 pygeometa is a Python package to generate metadata for geospatial datasets.
 
@@ -54,7 +54,7 @@ pygeometa is best installed and used within a Python virtualenv.
 
 ### Requirements
 
-* Python 2.7 and above.  Works with Python 3
+* Python 2.7 and above.  Works with Python 3 (but not tested)
 * Python [virtualenv](https://virtualenv.pypa.io/) package
 
 ### Dependencies
@@ -67,14 +67,55 @@ Dependencies are listed in [requirements.txt](requirements.txt). Dependencies ar
 virtualenv my-env
 cd my-env
 . bin/activate
-git clone https://github.com/geopython/pygeometa.git
+git clone https://github.com/laurensdv/pygeometa.git
 cd pygeometa
 pip install -r requirements.txt
 python setup.py build
 python setup.py install
 ```
 
-## Running
+## Running GeoDCAT-AP/ISO19139
+
+### From the command line
+
+```bash
+# iso19139 (XML) -> geodcat-ap (RDF)
+generate_metadata.py --xml=path/to/file.xml # to stdout
+generate_metadata.py --xml=path/to/file.xml --output some_file.xml # to file
+
+# geodcat-ap (RDF) -> iso19139 (XML)
+generate_metadata.py --rdf=path/to/file.xml # to stdout
+generate_metadata.py --rdf=path/to/file.rdf --output some_file.xml # to file
+```
+
+### Supported schemas
+Schemas supported by pygeometa:
+* iso-19139-to-dcat-ap, tweaked version of the EU ISO19139->GeoDCAT-AP conversion
+* iso191139-flanders, updated iso19139 to be compatible with open data in the Belgian/EU region Flanders.
+* Local schema, specified with ```--schema_local=/path/to/my-schema```
+
+### Use of local schemas
+
+| Action                             | Schema Type   |
+|------------------------------------|---------------|
+| iso19139 (XML) -> geodcat-ap (RDF) | xslt          |
+| geodcat-ap (RDF) -> iso19139 (XML) | pygeometadata |
+
+### Using the API from Python
+
+```python
+from pygeometa import iso_to_dcat, dcat_to_iso
+
+# default schemas
+rdf_output = iso_to_dcat('/path/to/file.xml')
+xml_output = dcat_to_iso('/path/to/file.xml')
+
+# user-defined schemas
+rdf_output = iso_to_dcat('/path/to/file.xml', schema_local='/path/to/new-schema.xsl')
+xml_output = dcat_to_iso('/path/to/file.rdf', schema_local='/path/to/new-schema')
+```
+
+## Running MCF/ISO19139 transformations
 
 ### From the command line
 
@@ -89,6 +130,7 @@ generate_metadata.py --mcf=path/to/file.mcf --schema_local=/path/to/my-schema --
 Schemas supported by pygeometa:
 * iso19139, [reference](http://www.iso.org/iso/catalogue_detail.htm?csnumber=32557)
 * iso19139-hnap, [reference](http://www.gcpedia.gc.ca/wiki/Federal_Geospatial_Platform/Policies_and_Standards/Catalogue/Release/Appendix_B_Guidelines_and_Best_Practices/Guide_to_Harmonized_ISO_19115:2003_NAP)
+* iso191139, updated iso19139 to be compatible with open data in the Belgian/EU region Flanders.
 * Local schema, specified with ```--schema_local=/path/to/my-schema```
 
 ### Using the API from Python
@@ -147,7 +189,6 @@ pygeometa originated within an internal project called pygdm, which provided gen
 
 In 2015 pygeometa was made publically available in support of the Treasury Board [Policy on Acceptable Network and Device Use](http://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=27122).
 
-## Contact
+## Contact (this mod only)
 
-* [Tom Kralidis](http://geds20-sage20.ssc-spc.gc.ca/en/GEDS20/?pgid=015&dn=CN%3Dtom.kralidis%40canada.ca%2COU%3DDAT-GES%2COU%3DMON-STR%2COU%3DMON-DIR%2COU%3DMSCB-DGSMC%2COU%3DDMO-CSM%2COU%3DEC-EC%2CO%3Dgc%2CC%3Dca)
-* [Alexandre Leroux](http://geds20-sage20.ssc-spc.gc.ca/en/GEDS20/?pgid=015&dn=CN%3Dalexandre.leroux%40canada.ca%2COU%3DDPS-DPS%2COU%3DCAN-OPE%2COU%3DCAN-CEN%2COU%3DMSCB-DGSMC%2COU%3DDMO-CSM%2COU%3DEC-EC%2CO%3Dgc%2CC%3Dca)
+* [Laurens De Vocht] (mailt:laurens.devocht@ugent.be)
