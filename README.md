@@ -81,15 +81,15 @@ python setup.py install
 ```bash
 # iso19139 (XML) -> geodcat-ap (RDF)
 generate_metadata.py --xml=path/to/file.xml # to stdout
-generate_metadata.py --xml=path/to/file.xml --output some_file.xml # to file
+generate_metadata.py --xml=path/to/file.xml --output=some_file.rdf # to file
 
 # geodcat-ap (RDF) -> iso19139 (XML)
 generate_metadata.py --rdf=path/to/file.xml # to stdout
-generate_metadata.py --rdf=path/to/file.rdf --output some_file.xml # to file
+generate_metadata.py --rdf=path/to/file.rdf --output=some_file.xml # to file
 ```
 
 ### Supported schemas
-Schemas supported by pygeometa:
+Schemas supported by this pygeometa branch:
 * iso-19139-to-dcat-ap, tweaked version of the EU ISO19139->GeoDCAT-AP conversion
 * iso191139-flanders, updated iso19139 to be compatible with open data in the Belgian/EU region Flanders.
 * Local schema, specified with ```--schema_local=/path/to/my-schema```
@@ -108,7 +108,7 @@ from pygeometa import iso_to_dcat, dcat_to_iso
 
 # default schemas
 rdf_output = iso_to_dcat('/path/to/file.xml')
-xml_output = dcat_to_iso('/path/to/file.xml')
+xml_output = dcat_to_iso('/path/to/file.rdf')
 
 # user-defined schemas
 rdf_output = iso_to_dcat('/path/to/file.xml', schema_local='/path/to/new-schema.xsl')
@@ -130,7 +130,7 @@ generate_metadata.py --mcf=path/to/file.mcf --schema_local=/path/to/my-schema --
 Schemas supported by pygeometa:
 * iso19139, [reference](http://www.iso.org/iso/catalogue_detail.htm?csnumber=32557)
 * iso19139-hnap, [reference](http://www.gcpedia.gc.ca/wiki/Federal_Geospatial_Platform/Policies_and_Standards/Catalogue/Release/Appendix_B_Guidelines_and_Best_Practices/Guide_to_Harmonized_ISO_19115:2003_NAP)
-* iso191139, updated iso19139 to be compatible with open data in the Belgian/EU region Flanders.
+* iso19139-flanders, updated iso19139 to be compatible with open data in the Belgian/EU region Flanders.
 * Local schema, specified with ```--schema_local=/path/to/my-schema```
 
 ### Using the API from Python
@@ -181,14 +181,16 @@ python run_tests.py
 
 ### Bugs and Issues
 
-All bugs, enhancements and issues are managed on [GitHub](https://github.com/geopython/pygeometa/issues).
+All bugs, enhancements and issues are managed on [GitHub](https://github.com/laurensdv/pygeometa/issues).
 
 ## History
+
+this pygeometadata branch intends to make it easy to transform iso19139 -> geodcat-ap and vise versa.
 
 pygeometa originated within an internal project called pygdm, which provided generic geospatial data management functions.  pygdm (now at end of life) was used for generating MSC/CMC geospatial metadata.  pygeometa was pulled out of pygdm to focus on the core requirement of generating geospatial metadata within a real-time environment.
 
 In 2015 pygeometa was made publically available in support of the Treasury Board [Policy on Acceptable Network and Device Use](http://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=27122).
 
-## Contact (this mod only)
+## Contact (this branch only)
 
-* [Laurens De Vocht] (mailt:laurens.devocht@ugent.be)
+* [Laurens De Vocht](mailto:laurens.devocht@ugent.be)
