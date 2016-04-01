@@ -211,7 +211,7 @@
         <gmd:MD_LegalConstraints>
           {% if record['identification']['limitation'] %}
               <gmd:useLimitation>
-                <gco:CharacterString>{{ if record['identification']['limitation'] }}</gco:CharacterString>
+                <gco:CharacterString>{{ record['identification']['limitation'] }}</gco:CharacterString>
               </gmd:useLimitation>
           {% endif %}
           {% if record['identification']['license'] %}

@@ -134,9 +134,8 @@ def convert(rdf):
                 ?license rdfs:label ?limitation } .
               OPTIONAL {
                 ?md dc:license ?licenseUrl .
-                FILTER isBlank(?licenseUrl).
-                FILTER isUri(?licenseUrl).
-              }
+                FILTER (!isBlank(?licenseUrl)).
+                FILTER (isUri(?licenseUrl)) } .
            }""")
 
     result += "\n[identification]\n"
