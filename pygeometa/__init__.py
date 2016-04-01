@@ -216,7 +216,6 @@ def render_template(mcf, schema=None, schema_local=None):
     xml = template.render(record=read_mcf(mcf),
                           software_version=__version__).encode('utf-8')
 
-    print(xml)
     return pretty_print(xml)
 
 
