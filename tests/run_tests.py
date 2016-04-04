@@ -170,6 +170,7 @@ class PygeometaTest(unittest.TestCase):
 
     # RDF -{1}> XML -> RDF -{2}> XML {1} ?== {2}
 
+
     # XML -> RDF -{1}> XML -> RDF -{2}> XML {1} ?== {2}
 
 
