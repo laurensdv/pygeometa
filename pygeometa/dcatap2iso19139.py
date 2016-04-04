@@ -280,7 +280,8 @@ def convert(rdf):
                   ?scheme a skos:ConceptScheme ;
                          dc:title ?scheme_title ;
                          dc:issued ?scheme_issued } .
-              OPTIONAL { ?scheme dc:type ?scheme_type } .
+              OPTIONAL { ?scheme dc:type ?scheme_type .
+                         ?scheme a skos:ConceptScheme } .
            }""")
 
     keywords = {}

@@ -2205,13 +2205,11 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:variable>
-            <rdfs:comment xml:lang="en">Spatial resolution (distance):<xsl:value-of select="."/>&#160;
-                <xsl:value-of select="$UoM"/>
+            <rdfs:comment xml:lang="en">Spatial resolution (distance):<xsl:value-of select="."/>&#160;<xsl:value-of select="$UoM"/>
             </rdfs:comment>
         </xsl:for-each>
         <xsl:for-each select="gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator">
-            <rdfs:comment xml:lang="en">Spatial resolution (equivalent scale): 1:
-                <xsl:value-of select="gco:Integer"/>
+            <rdfs:comment xml:lang="en">Spatial resolution (equivalent scale): 1:<xsl:value-of select="gco:Integer"/>
             </rdfs:comment>
         </xsl:for-each>
     </xsl:template>

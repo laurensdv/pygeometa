@@ -76,28 +76,6 @@
     </gmd:MD_VectorSpatialRepresentation>
     {% endif %}
   </gmd:spatialRepresentationInfo>
-  {% if record['spatial']['resolution'] %}
-  <gmd:spatialResolution>
-            <gmd:MD_Resolution>
-               <gmd:equivalentScale>
-                  <gmd:MD_RepresentativeFraction>
-                     <gmd:denominator>
-                        <gco:Integer>{{ record['spatial']['resolution'] }}</gco:Integer>
-                     </gmd:denominator>
-                  </gmd:MD_RepresentativeFraction>
-               </gmd:equivalentScale>
-            </gmd:MD_Resolution>
-   </gmd:spatialResolution>
-  {% endif %}
-  {% if record['spatial']['resolution_d'] and record['spatial']['resolution_d_m'] %}
-  <gmd:spatialResolution>
-    <gmd:MD_Resolution>
-    <gmd:distance>
-    <gco:Distance uom="{{ record['spatial']['resolution_d_m'] }}">{{ record['spatial']['resolution_d'] }}</gco:Distance>
-    </gmd:distance>
-    </gmd:MD_Resolution>
-  </gmd:spatialResolution>
-  {% endif %}
   {% if record['spatial']['crs'] %}
   <gmd:referenceSystemInfo>
     <gmd:MD_ReferenceSystem>
@@ -292,6 +270,28 @@
       </srv:extent>
       {% else %}
       </gmd:extent>
+      {% endif %}
+      {% if record['spatial']['resolution'] %}
+      <gmd:spatialResolution>
+                <gmd:MD_Resolution>
+                   <gmd:equivalentScale>
+                      <gmd:MD_RepresentativeFraction>
+                         <gmd:denominator>
+                            <gco:Integer>{{ record['spatial']['resolution'] }}</gco:Integer>
+                         </gmd:denominator>
+                      </gmd:MD_RepresentativeFraction>
+                   </gmd:equivalentScale>
+                </gmd:MD_Resolution>
+       </gmd:spatialResolution>
+      {% endif %}
+      {% if record['spatial']['resolution_d'] and record['spatial']['resolution_d_m'] %}
+      <gmd:spatialResolution>
+        <gmd:MD_Resolution>
+        <gmd:distance>
+        <gco:Distance uom="{{ record['spatial']['resolution_d_m'] }}">{{ record['spatial']['resolution_d'] }}</gco:Distance>
+        </gmd:distance>
+        </gmd:MD_Resolution>
+      </gmd:spatialResolution>
       {% endif %}
       {% if record['identification']['url'] %}
       {{ cs.get_freetext('supplementalInformation', record['metadata']['language_alternate'], get_charstring('url', record['identification'], record['metadata']['language'], record['metadata']['language_alternate'])) }}
