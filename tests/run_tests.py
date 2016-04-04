@@ -104,7 +104,7 @@ class PygeometaTest(unittest.TestCase):
         """Test support of unilingual or multilingual value(s)"""
 
         values = get_charstring('title', {'title': 'foo'}, 'en')
-        self.assertEqual(values, ['foo', None], 'Expected specific values')
+        self.assertEqual(values, ['foo', ''], 'Expected specific values')
 
         values = get_charstring('title',
                                 {'title_en': 'foo', 'title_fr': 'bar'},
@@ -123,11 +123,11 @@ class PygeometaTest(unittest.TestCase):
 
         values = get_charstring('title',
                                 {'title_fr': 'foo', 'title_en': 'bar'}, 'fr')
-        self.assertEqual(values, ['foo', None], 'Expected specific values')
+        self.assertEqual(values, ['foo', ''], 'Expected specific values')
 
         values = get_charstring('notfound',
                                 {'title_fr': 'foo', 'title_en': 'bar'}, 'fr')
-        self.assertEqual(values, [None, None], 'Expected specific values')
+        self.assertEqual(values, ['', ''], 'Expected specific values')
 
     def test_get_supported_schemas(self):
         """Test supported schemas"""
@@ -135,8 +135,8 @@ class PygeometaTest(unittest.TestCase):
         schemas = sorted(get_supported_schemas())
         schemas.remove('common')  # remove shared snippets
         self.assertIsInstance(schemas, list, 'Expected list')
-        self.assertEqual(len(schemas), 2, 'Expected 2 supported schemas')
-        self.assertEqual(schemas, sorted(['iso19139', 'iso19139-hnap']),
+        self.assertEqual(len(schemas), 3, 'Expected 3 supported schemas')
+        self.assertEqual(schemas, sorted(['iso19139', 'iso19139-hnap', 'iso19139-flanders']),
                          'Expected exact list of supported schemas')
 
     def test_render_template(self):

@@ -104,7 +104,7 @@ def convert(rdf):
         if row['hierarchyLevel'] is not None:
             if "spatialdataservicetype" in row['hierarchyLevel'].lower():
                 result += "spatialdataservicetype=%s\n" % row['hierarchyLevel'].lower()[row['hierarchyLevel'].rfind('/')+1:]
-            elif "hierarchyLevel" not in result:
+            elif "hierarchylevel" not in result:
                 if "dataset" in row['hierarchyLevel'].lower():
                     result += "hierarchylevel=dataset\n"
                 elif "service" in row['hierarchyLevel'].lower():
@@ -128,7 +128,7 @@ def convert(rdf):
                 if "spatialdataservicetype" in row['hierarchyLevel'].lower():
                     result += "spatialdataservicetype=%s\n" % row['hierarchyLevel'].lower()[
                                                               row['hierarchyLevel'].rfind('/') + 1:]
-                elif "hierarchyLevel" not in result:
+                elif "hierarchylevel" not in result:
                     if "dataset" in row['hierarchyLevel'].lower():
                         result += "hierarchylevel=dataset\n"
                     elif "service" in row['hierarchyLevel'].lower():
@@ -188,7 +188,7 @@ def convert(rdf):
                 ?md dc:license ?licenseUrl .
                 FILTER (!isBlank(?licenseUrl)).
                 FILTER (isUri(?licenseUrl)) } .
-           }""")
+           } LIMIT 1""")
 
     result += "\n[identification]\n"
 
