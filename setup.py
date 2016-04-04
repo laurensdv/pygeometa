@@ -141,7 +141,10 @@ def find_packages_templates(location='.'):
         if 'transformations' in dirs:  # include as a package_data key
             packages.append(root.replace(os.sep, '.').replace('..', ''))
 
-    return {'pygeometa': ['templates/*/*.j2', 'transformations/*/*.xsl']}
+    return {'pygeometa': ['templates/*/*.j2',
+                          'transformations/*/*.x*',
+                          'transformations/*/*/*.x*',
+                          'transformations/*/*/*/*.x*']}
     #return packages
 
 

@@ -46,7 +46,7 @@
 
 import click
 
-from pygeometa import get_supported_schemas, render_template, iso_to_dcat, dcat_to_iso
+from pygeometa import get_supported_schemas, render_template, iso_to_dcat, dcat_to_iso, iso_to_html
 
 SUPPORTED_SCHEMAS = get_supported_schemas()
 
@@ -63,6 +63,7 @@ SUPPORTED_SCHEMAS = get_supported_schemas()
               help='Path to ISO-19139 metadata file (.xml)')
 @click.option('--output', type=click.File('w', encoding='utf-8'),
               help='Name of output file')
+@click.option('--html', is_flag=True)
 @click.option('--schema',
               type=click.Choice(SUPPORTED_SCHEMAS),
               help='Metadata schema')
@@ -70,14 +71,17 @@ SUPPORTED_SCHEMAS = get_supported_schemas()
               type=click.Path(exists=True, resolve_path=True,
                               dir_okay=True, file_okay=False),
               help='Locally defined metadata schema')
-def process_args(mcf, rdf, xml, schema, schema_local, output):
+def process_args(mcf, rdf, xml, html, schema, schema_local, output):
     if xml is not None and rdf is None:
-        rdf_output = iso_to_dcat(xml, schema=schema, schema_local=schema_local)
+        if html:
+            t_output = iso_to_html(xml, schema=schema, schema_local=schema_local)
+        else:
+            t_output = iso_to_dcat(xml, schema=schema, schema_local=schema_local)
 
         if output is None:
-            click.echo_via_pager(rdf_output)
+            click.echo_via_pager(t_output)
         else:
-            output.write(rdf_output)
+            output.write(t_output)
 
     elif rdf is not None and xml is None:
         xml_output = dcat_to_iso(rdf, schema=schema, schema_local=schema_local)

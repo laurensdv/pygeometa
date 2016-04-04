@@ -236,6 +236,25 @@ def iso_to_dcat(xml, schema=None, schema_local=None):
     return unicode(ET.tostring(newdom, pretty_print=True), "UTF-8")
 
 
+def iso_to_html(iso, schema=None, schema_local=None):
+    if schema is None and schema_local is None:
+        abspath = '{}{}{}'.format(TRANSFORMATIONS, os.sep, 'html/iso2html/xml-to-html-ISO.xsl')
+        # Defaults to: https://github.com/geoblacklight/geoblacklight-schema
+        # Alternative (included): https://github.com/sul-dlss/geohydra/tree/master/scripts/iso2html
+    elif schema_local is None:  # default transformations dir
+        abspath = '{}{}{}'.format(TRANSFORMATIONS, os.sep, schema)
+    elif schema is None:  # user-defined
+        abspath = schema_local
+
+    LOGGER.debug('Setting up transformations environment {}'.format(abspath))
+    dom = ET.parse(os.path.realpath(iso))
+    xslt_root = ET.parse(abspath)
+    transform = ET.XSLT(xslt_root)
+    newdom = transform(dom)
+
+    return unicode(ET.tostring(newdom, pretty_print=True), "UTF-8")
+
+
 def dcat_to_iso(rdf, schema=None, schema_local=None):
     result = convert(rdf)
     _, fp = tempfile.mkstemp()

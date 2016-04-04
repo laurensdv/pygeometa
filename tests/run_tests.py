@@ -168,6 +168,10 @@ class PygeometaTest(unittest.TestCase):
 
         self.assertIsInstance(mcf, dict, 'Expected dict')
 
+    # RDF -{1}> XML -> RDF -{2}> XML {1} ?== {2}
+
+    # XML -> RDF -{1}> XML -> RDF -{2}> XML {1} ?== {2}
+
 
 def get_abspath(filepath):
     """helper function absolute file access"""
