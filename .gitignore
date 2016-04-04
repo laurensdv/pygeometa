@@ -44,3 +44,7 @@ docs/_build/
 *.mcf
 *.xml
 MANIFEST
+
+# IntelliJ
+.idea/*
+.idea
