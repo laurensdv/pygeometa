@@ -52,6 +52,7 @@ import codecs
 import logging
 import os
 import re
+from io import BytesIO
 from xml.dom import minidom
 import lxml.etree as ET
 from pygeometa.dcatap2iso19139 import convert
@@ -81,7 +82,7 @@ def get_charstring(option, section_items, language,
     option_value1 = ""
     option_value2 = ""
 
-    if 'language_alternate' is None:  # unilingual
+    if language_alternate is None or not language_alternate:  # unilingual
         option_tmp = '{}_{}'.format(option, language)
         if option_tmp in section_items:
             option_value1 = section_items[option_tmp]
@@ -90,6 +91,12 @@ def get_charstring(option, section_items, language,
                 option_value1 = section_items[option]
             except KeyError:
                 pass  # default=None
+
+        i = 0
+        while i < len(re.findall(',', option_value1)):
+            i += 1
+            option_value2 += ','
+
     else:  # multilingual
         option_tmp = '{}_{}'.format(option, language)
         if option_tmp in section_items:
@@ -216,7 +223,7 @@ def render_template(mcf, schema=None, schema_local=None):
     xml = template.render(record=read_mcf(mcf),
                           software_version=__version__).encode('utf-8')
 
-    return pretty_print(xml)
+    return ET.parse(BytesIO(xml))
 
 
 def iso_to_dcat(xml, schema=None, schema_local=None):
@@ -233,7 +240,7 @@ def iso_to_dcat(xml, schema=None, schema_local=None):
     transform = ET.XSLT(xslt_root)
     newdom = transform(dom)
 
-    return unicode(ET.tostring(newdom, pretty_print=True), "UTF-8")
+    return newdom
 
 
 def iso_to_html(iso, schema=None, schema_local=None):
@@ -252,7 +259,7 @@ def iso_to_html(iso, schema=None, schema_local=None):
     transform = ET.XSLT(xslt_root)
     newdom = transform(dom)
 
-    return unicode(ET.tostring(newdom, pretty_print=True), "UTF-8")
+    return newdom
 
 
 def dcat_to_iso(rdf, schema=None, schema_local=None):

@@ -40,13 +40,13 @@ def convert(rdf):
         """SELECT DISTINCT *
            WHERE {
               ?md foaf:isPrimaryTopicOf ?a .
-              ?a a dcat:CatalogRecord ;
-              dc:language ?language ;
-              dc:identifier ?identifier ;
-              dc:modified ?datestamp ;
-              dc:source ?source .
-              ?source content:characterEncoding ?charset .
-              OPTIONAL { ?a dc:isPartOf ?parent } .
+              ?a a dcat:CatalogRecord .
+              OPTIONAL { ?a dc:language ?language } .
+              OPTIONAL { ?a dc:identifier ?identifier } .
+              OPTIONAL { ?a dc:modified ?datestamp } .
+              OPTIONAL { ?a dc:source ?source } .
+              OPTIONAL { ?source content:characterEncoding ?charset } .
+              OPTIONAL { ?source dc:isPartOf ?parent } .
               OPTIONAL { ?source dc:conformsTo ?c } .
               OPTIONAL { ?c dc:title ?metadatastandardname } .
               OPTIONAL { ?c owl:versionInfo ?metadatastandardversion } .
@@ -68,7 +68,7 @@ def convert(rdf):
             result += "datestamp=%s\n" % row['datestamp']
 
     # if no metadata provided create new metadata:
-    if len(qres) == 0:
+    if len(qres) == 0 or qres is None:
         qres = g.query(
             PREFIXES +
             """SELECT DISTINCT *
@@ -96,7 +96,7 @@ def convert(rdf):
         PREFIXES +
         """SELECT DISTINCT *
            WHERE {
-              ?md dc:type ?hierarchyLevel .
+              { ?md a ?hierarchyLevel } UNION { ?md dc:type ?hierarchyLevel } .
               ?md foaf:isPrimaryTopicOf ?a .
            }""")
 
@@ -104,7 +104,7 @@ def convert(rdf):
         if row['hierarchyLevel'] is not None:
             if "spatialdataservicetype" in row['hierarchyLevel'].lower():
                 result += "spatialdataservicetype=%s\n" % row['hierarchyLevel'].lower()[row['hierarchyLevel'].rfind('/')+1:]
-            elif not "hierarchyLevel" in result:
+            elif "hierarchyLevel" not in result:
                 if "dataset" in row['hierarchyLevel'].lower():
                     result += "hierarchylevel=dataset\n"
                 elif "service" in row['hierarchyLevel'].lower():
@@ -113,6 +113,30 @@ def convert(rdf):
                     result += "hierarchylevel=discovery\n"
                 elif "series" in row['hierarchyLevel'].lower():
                     result += "hierarchylevel=series\n"
+
+    if len(qres) == 0 or qres is None:
+        qres = g.query(
+            PREFIXES +
+            """SELECT DISTINCT *
+               WHERE {
+                  ?md a ?hierarchyLevel .
+                  FILTER (?hierarchyLevel = dcat:Catalog || ?hierarchyLevel = dcat:Dataset || ?something = dc:Service) .
+               }""")
+
+        for row in qres:
+            if row['hierarchyLevel'] is not None:
+                if "spatialdataservicetype" in row['hierarchyLevel'].lower():
+                    result += "spatialdataservicetype=%s\n" % row['hierarchyLevel'].lower()[
+                                                              row['hierarchyLevel'].rfind('/') + 1:]
+                elif "hierarchyLevel" not in result:
+                    if "dataset" in row['hierarchyLevel'].lower():
+                        result += "hierarchylevel=dataset\n"
+                    elif "service" in row['hierarchyLevel'].lower():
+                        result += "hierarchylevel=service\n"
+                    elif "catalog" in row['hierarchyLevel'].lower():
+                        result += "hierarchylevel=discovery\n"
+                    elif "series" in row['hierarchyLevel'].lower():
+                        result += "hierarchylevel=series\n"
 
     qres = g.query(
         PREFIXES +

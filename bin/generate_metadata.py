@@ -46,6 +46,8 @@
 
 import click
 
+from lxml import etree as ET
+
 from pygeometa import get_supported_schemas, render_template, iso_to_dcat, dcat_to_iso, iso_to_html
 
 SUPPORTED_SCHEMAS = get_supported_schemas()
@@ -61,7 +63,7 @@ SUPPORTED_SCHEMAS = get_supported_schemas()
 @click.option('--xml',
               type=click.Path(exists=True, resolve_path=True),
               help='Path to ISO-19139 metadata file (.xml)')
-@click.option('--output', type=click.File('w', encoding='utf-8'),
+@click.option('--output', type=click.File('wb'),
               help='Name of output file')
 @click.option('--html', is_flag=True)
 @click.option('--schema',
@@ -87,9 +89,9 @@ def process_args(mcf, rdf, xml, html, schema, schema_local, output):
         xml_output = dcat_to_iso(rdf, schema=schema, schema_local=schema_local)
 
         if output is None:
-            click.echo_via_pager(xml_output)
+            click.echo_via_pager(ET.tostring(xml_output.getroot()))
         else:
-            output.write(xml_output)
+            xml_output.write(output)
 
     elif (rdf is None or xml is None) and mcf is None:
         raise click.UsageError('Missing arguments')

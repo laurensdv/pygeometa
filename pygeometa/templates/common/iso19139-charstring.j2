@@ -3,7 +3,7 @@
       <gmd:{{ element }}>
         <gco:CharacterString>{{ myvars[0]|trim|e }}</gco:CharacterString>
       </gmd:{{ element }}>
-{% else %}q
+{% else %}
       <gmd:{{ element }} xsi:type="gmd:PT_FreeText_PropertyType">
         <gco:CharacterString>{{ myvars[0]|trim|e }}</gco:CharacterString>
           <gmd:PT_FreeText>

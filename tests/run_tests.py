@@ -46,10 +46,18 @@
 import os
 import unittest
 
-from six import text_type
+from six import text_type, binary_type
+import tempfile
+import codecs
+
+import lxml.etree as ET
+
 
 from pygeometa import (read_mcf, pretty_print,
                        render_template, get_charstring, get_supported_schemas)
+
+from pygeometa import (iso_to_dcat)
+from pygeometa.dcatap2iso19139 import convert
 
 THISDIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -86,7 +94,7 @@ class PygeometaTest(unittest.TestCase):
         """Test pretty-printing"""
 
         xml = render_template(get_abspath('../sample.mcf'), 'iso19139')
-        xml2 = pretty_print(xml)
+        xml2 = pretty_print(ET.tostring(xml.getroot()))
 
         self.assertIsInstance(xml2, text_type, 'Expected unicode string')
         self.assertEqual(xml2[-1], '>', 'Expected closing bracket')
@@ -135,10 +143,10 @@ class PygeometaTest(unittest.TestCase):
         """test template rendering"""
 
         xml = render_template(get_abspath('../sample.mcf'), 'iso19139')
-        self.assertIsInstance(xml, text_type, 'Expected unicode string')
+        self.assertIsInstance(ET.tostring(xml.getroot()), binary_type, 'Expected unicode string')
 
         # no schema provided
-        with self.assertRaises(RuntimeError):
+        with self.assertRaises(AttributeError):
             render_template(get_abspath('../sample.mcf'))
 
         # bad schema provided
@@ -168,11 +176,105 @@ class PygeometaTest(unittest.TestCase):
 
         self.assertIsInstance(mcf, dict, 'Expected dict')
 
-    # RDF -{1}> XML -> RDF -{2}> XML {1} ?== {2}
+    # RDF -{1}> XML -> RDF -{2}> XML: {1} ?== {2}
+    def test_rdf_lossless(self):
+        # RDF -{1}> XML
+        rdf = get_abspath('./sample_conversions/afghanistan.ttl')
+        result = convert(rdf)
+        _, fp = tempfile.mkstemp()
 
+        with codecs.open(fp, 'w', encoding='utf-8') as f:
+            f.write(u'%s' % result)
+        f.close()
 
-    # XML -> RDF -{1}> XML -> RDF -{2}> XML {1} ?== {2}
+        # {1}
+        mcf1 = read_mcf(os.path.realpath(fp))
 
+        xml = render_template(fp, schema='iso19139-flanders')
+
+        _, xp = tempfile.mkstemp()
+        f = open(xp, 'wb')
+        xml.write(f)
+        f.close()
+
+        # XML -> RDF
+        rdf_content = iso_to_dcat(get_abspath(xp))
+
+        _, rp = tempfile.mkstemp()
+        f = open(rp, 'wb')
+        rdf_content.write(f)
+        f.close()
+
+        # RDF -{2}> XML
+        rdf2 = os.path.realpath(rp)
+        result = convert(rdf2)
+        _, fp2 = tempfile.mkstemp()
+
+        with codecs.open(fp2, 'w', encoding='utf-8') as f:
+            f.write(u'%s' % result)
+        f.close()
+
+        # {2}
+        mcf2 = read_mcf(os.path.realpath(fp2))
+
+        # {1} ? == {2}
+        self.assertDictEqual(mcf1, mcf2)
+
+    # XML -> RDF -{1}> XML -> RDF -{2}> XML: {1} ?== {2}
+    # def test_xml_lossless(self):
+    #     test_files = ['./sample_conversions/ds_md_ispra-0001.xml',
+    #                   './sample_conversions/srv_md_ispra-0001.xml']
+    #
+    #     for t in test_files:
+    #         # XML -> RDF
+    #         rdf_content = iso_to_dcat(get_abspath(t))
+    #
+    #         _, rp = tempfile.mkstemp()
+    #         f = open(rp, 'wb')
+    #         rdf_content.write(f)
+    #         f.close()
+    #
+    #         # RDF -{1}> XML
+    #         rdf = os.path.realpath(rp)
+    #         result = convert(rdf)
+    #         _, fp = tempfile.mkstemp()
+    #
+    #         with codecs.open(fp, 'w', encoding='utf-8') as f:
+    #             f.write(u'%s' % result)
+    #         f.close()
+    #
+    #         # {1}
+    #         mcf1 = read_mcf(os.path.realpath(fp))
+    #
+    #         xml = render_template(fp, schema='iso19139-flanders')
+    #
+    #         _, xp = tempfile.mkstemp()
+    #         f = open(xp, 'wb')
+    #         xml.write(f)
+    #         f.close()
+    #
+    #         # XML -> RDF
+    #         rdf_content2 = iso_to_dcat(os.path.realpath(xp))
+    #
+    #         _, rp2 = tempfile.mkstemp()
+    #         f = open(rp2, 'wb')
+    #         rdf_content2.write(f)
+    #         f.close()
+    #
+    #         # RDF -{2}> XML
+    #         rdf2 = os.path.realpath(rp2)
+    #         result = convert(rdf2)
+    #         _, fp2 = tempfile.mkstemp()
+    #
+    #         with codecs.open(fp2, 'w', encoding='utf-8') as f:
+    #             f.write(u'%s' % result)
+    #         f.close()
+    #
+    #         # {2}
+    #         mcf2 = read_mcf(os.path.realpath(fp2))
+    #
+    #         # {1} ? == {2}
+    #         self.assertDictEqual(mcf1, mcf2)
 
 def get_abspath(filepath):
     """helper function absolute file access"""
