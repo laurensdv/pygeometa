@@ -273,7 +273,8 @@ class PygeometaTest(unittest.TestCase):
 
         test_files = [
             './sample_conversions/ds_md_ispra-0001.xml',
-            './sample_conversions/srv_md_ispra-0001.xml'
+            './sample_conversions/srv_md_ispra-0001.xml',
+            './gent.xml'
         ]
 
         for t in test_files:
