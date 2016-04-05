@@ -45,13 +45,13 @@
 
 import os
 import unittest
+from collections import OrderedDict
 
 from six import text_type, binary_type
 import tempfile
 import codecs
-
 import lxml.etree as ET
-
+import re
 
 from pygeometa import (read_mcf, pretty_print,
                        render_template, get_charstring, get_supported_schemas)
@@ -59,12 +59,52 @@ from pygeometa import (read_mcf, pretty_print,
 from pygeometa import (iso_to_dcat)
 from pygeometa.dcatap2iso19139 import convert
 
+from dateutil.parser import parse
+
 THISDIR = os.path.dirname(os.path.realpath(__file__))
 
 
 def msg(test_id, test_description):
     """convenience function to print out test id and desc"""
     return '%s: %s' % (test_id, test_description)
+
+
+def normalize_space(inp):
+    if ',' in inp:  # sort arrays just in case
+        arr = inp.split(',')
+        arr.sort()
+        inp = ','.join(arr)
+    inp = inp.strip()
+    inp = re.sub(r'\s+', ' ', inp)
+    return inp
+
+
+def get_values(mcf1):
+    try:
+        iteritems = dict.iteritems
+    except AttributeError:
+        iteritems = dict.items
+    values = set()
+    for k, v in iteritems(mcf1):
+        if v and v is not None:
+            if type(v) is dict or type(v) is OrderedDict:
+                for t, c in iteritems(v):
+                    if c and c is not None:
+                        try:
+                            values.add(parse(c).strftime("%d-%m-%y"))  # convert timestamps to same format
+                        except ValueError:
+                            values.add(normalize_space(c))
+                        except TypeError:
+                            values.add(normalize_space(c))
+
+            else:
+                try:
+                    values.add(parse(v).strftime("%d-%m-%y"))
+                except ValueError:
+                    values.add(normalize_space(v))
+                except TypeError:
+                    values.add(normalize_space(v))
+    return values
 
 
 class PygeometaTest(unittest.TestCase):
@@ -218,7 +258,10 @@ class PygeometaTest(unittest.TestCase):
         mcf2 = read_mcf(os.path.realpath(fp2))
 
         # {1} ? == {2}
-        self.assertDictEqual(mcf1, mcf2)
+        mcf1 = get_values(mcf1)
+        mcf2 = get_values(mcf2)
+        self.assertSetEqual(mcf1, mcf2)
+
 
     # XML -> RDF -{1}> XML -> RDF -{2}> XML: {1} ?== {2}
     def test_xml_lossless(self):
@@ -276,7 +319,9 @@ class PygeometaTest(unittest.TestCase):
             mcf2 = read_mcf(os.path.realpath(fp2))
 
             # {1} ? == {2}
-            self.assertDictEqual(mcf1, mcf2)
+            mcf1 = get_values(mcf1)
+            mcf2 = get_values(mcf2)
+            self.assertSetEqual(mcf1, mcf2)
 
 def get_abspath(filepath):
     """helper function absolute file access"""
