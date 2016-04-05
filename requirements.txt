@@ -1,4 +1,3 @@
-Click
 click
 Jinja2
 six
