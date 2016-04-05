@@ -89,13 +89,14 @@ def get_values(mcf1):
         if v and v is not None:
             if type(v) is dict or type(v) is OrderedDict:
                 for t, c in iteritems(v):
-                    if c and c is not None:
-                        try:
-                            values.add(D.parse(c).strftime("%d-%m-%y"))  # convert timestamps to same format
-                        except ValueError:
-                            values.add(normalize_space(c))
-                        except TypeError:
-                            values.add(normalize_space(c))
+                    if '__name__' not in t:
+                        if c and c is not None:
+                            try:
+                                values.add(D.parse(c).strftime("%d-%m-%y"))  # convert timestamps to same format
+                            except ValueError:
+                                values.add(normalize_space(c))
+                            except TypeError:
+                                values.add(normalize_space(c))
 
             else:
                 try:
@@ -219,6 +220,8 @@ class PygeometaTest(unittest.TestCase):
 
     # RDF -{1}> XML -> RDF -{2}> XML: {1} ?== {2}
     def test_rdf_lossless(self):
+        """Test RDF2XML2RDF"""
+
         # RDF -{1}> XML
         rdf = get_abspath('./sample_conversions/afghanistan.ttl')
         result = convert(rdf)
@@ -265,6 +268,8 @@ class PygeometaTest(unittest.TestCase):
 
     # XML -> RDF -{1}> XML -> RDF -{2}> XML: {1} ?== {2}
     def test_xml_lossless(self):
+        """Test XML2RDF2XML"""
+
         test_files = [
             './sample_conversions/ds_md_ispra-0001.xml',
             './sample_conversions/srv_md_ispra-0001.xml'
