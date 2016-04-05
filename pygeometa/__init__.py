@@ -57,7 +57,6 @@ from xml.dom import minidom
 import lxml.etree as ET
 from pygeometa.dcatap2iso19139 import convert
 import tempfile
-import codecs
 
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
@@ -71,8 +70,9 @@ LOGGER = logging.getLogger(__name__)
 TEMPLATES = '%s%stemplates' % (os.path.dirname(os.path.realpath(__file__)),
                                os.sep)
 
-TRANSFORMATIONS = '%s%stransformations' % (os.path.dirname(os.path.realpath(__file__)),
-                                           os.sep)
+TRANSFORMATIONS = '%s%stransformations' % (
+os.path.dirname(os.path.realpath(__file__)),
+os.sep)
 
 
 def get_charstring(option, section_items, language,
@@ -183,7 +183,8 @@ def pretty_print(xml):
     LOGGER.debug('pretty-printing XML')
     val = minidom.parseString(xml)
     return '\n'.join([l for l in
-                      val.toprettyxml(indent=' ' * 2).split('\n') if l.strip()])
+                      val.toprettyxml(indent=' ' * 2).split('\n') if
+                      l.strip()])
 
 
 def render_template(mcf, schema=None, schema_local=None):
@@ -229,7 +230,8 @@ def render_template(mcf, schema=None, schema_local=None):
 
 def iso_to_dcat(xml, schema=None, schema_local=None):
     if schema is None and schema_local is None:
-        abspath = '{}{}{}'.format(TRANSFORMATIONS, os.sep, 'geodcat-ap/iso-19139-to-dcat-ap.xsl')
+        abspath = '{}{}{}'.format(TRANSFORMATIONS, os.sep,
+                                  'geodcat-ap/iso-19139-to-dcat-ap.xsl')
     elif schema_local is None:  # default transforamtions dir
         abspath = '{}{}{}'.format(TRANSFORMATIONS, os.sep, schema)
     elif schema is None:  # user-defined
@@ -246,9 +248,11 @@ def iso_to_dcat(xml, schema=None, schema_local=None):
 
 def iso_to_html(iso, schema=None, schema_local=None):
     if schema is None and schema_local is None:
-        abspath = '{}{}{}'.format(TRANSFORMATIONS, os.sep, 'html/iso2html/xml-to-html-ISO.xsl')
+        abspath = '{}{}{}'.format(TRANSFORMATIONS, os.sep,
+                                  'html/iso2html/xml-to-html-ISO.xsl')
         # Defaults to: https://github.com/geoblacklight/geoblacklight-schema
-        # Alternative (included): https://github.com/sul-dlss/geohydra/tree/master/scripts/iso2html
+        # Alternative (included):
+        # https://github.com/sul-dlss/geohydra/tree/master/scripts/iso2html
     elif schema_local is None:  # default transformations dir
         abspath = '{}{}{}'.format(TRANSFORMATIONS, os.sep, schema)
     elif schema is None:  # user-defined

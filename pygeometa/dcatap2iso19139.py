@@ -32,7 +32,8 @@ prefix iso: <http://def.seegrid.csiro.au/isotc211/iso19115/2003/metadata#>
 
 def convert(rdf):
     g = rdflib.Graph()
-    g.parse(os.path.realpath(rdf), format=rdflib.util.guess_format(os.path.realpath(rdf)))
+    g.parse(os.path.realpath(rdf),
+            format=rdflib.util.guess_format(os.path.realpath(rdf)))
 
     result = ""
     qres = g.query(  # Mandatory -> required; Optional -> OPTIONAL
@@ -62,7 +63,8 @@ def convert(rdf):
         if row['parent'] is not None:
             result += "parentidentifier=%s\n" % row['parent']
         if row['charset'] is not None:
-            result += "charset=%s\n" % re.sub(r'\W+', '', row['charset'].lower())
+            result += "charset=%s\n" % re.sub(r'\W+', '',
+                                              row['charset'].lower())
 
         if row['datestamp'] is not None:
             result += "datestamp=%s\n" % row['datestamp']
@@ -88,7 +90,8 @@ def convert(rdf):
                 if row['issued'] is not None:
                     result += "datestamp=%s\n" % row['issued']
                 else:
-                    result += "datestamp=%s\n" % datetime.datetime.now().isoformat()
+                    result += "datestamp=%s\n" % datetime.datetime.now() \
+                        .isoformat()
 
         result += "charset=%s\n" % 'utf8'
 
@@ -103,8 +106,11 @@ def convert(rdf):
     for row in qres:
         if row['hierarchyLevel'] is not None:
             if "spatialdataservicetype" in row['hierarchyLevel'].lower():
-                result += "spatialdataservicetype=%s\n" % row['hierarchyLevel'].lower()[
-                                                          row['hierarchyLevel'].rfind('/') + 1:]
+                result += "spatialdataservicetype=%s\n" % row[
+                                                              'hierarchyLevel'].lower()[
+                                                          row[
+                                                              'hierarchyLevel'].rfind(
+                                                              '/') + 1:]
             elif "hierarchylevel" not in result:
                 if "dataset" in row['hierarchyLevel'].lower():
                     result += "hierarchylevel=dataset\n"
@@ -127,8 +133,11 @@ def convert(rdf):
         for row in qres:
             if row['hierarchyLevel'] is not None:
                 if "spatialdataservicetype" in row['hierarchyLevel'].lower():
-                    result += "spatialdataservicetype=%s\n" % row['hierarchyLevel'].lower()[
-                                                              row['hierarchyLevel'].rfind('/') + 1:]
+                    result += "spatialdataservicetype=%s\n" % row[
+                                                                  'hierarchyLevel'].lower()[
+                                                              row[
+                                                                  'hierarchyLevel'].rfind(
+                                                                  '/') + 1:]
                 elif "hierarchylevel" not in result:
                     if "dataset" in row['hierarchyLevel'].lower():
                         result += "hierarchylevel=dataset\n"
@@ -155,7 +164,8 @@ def convert(rdf):
         if row['metadatastandardname'] is not None:
             result += "metadatastandardname=%s\n" % row['metadatastandardname']
         if row['metadatastandardversion'] is not None:
-            result += "metadatastandardversion=%s\n" % row['metadatastandardversion']
+            result += "metadatastandardversion=%s\n" % row[
+                'metadatastandardversion']
 
     qres = g.query(
         PREFIXES +
@@ -195,13 +205,17 @@ def convert(rdf):
 
     for row in qres:
         if row['title'] is not None:
-            result += "title=%s\n" % row['title']  # title_nl?  row['title'].language
+            result += "title=%s\n" % row[
+                'title']  # title_nl?  row['title'].language
 
         if row['alternativeTitle'] is not None:
-            result += "alternative_title=%s\n" % row['alternativeTitle']  # row['alternativeTitle'].language
+            result += "alternative_title=%s\n" % row[
+                'alternativeTitle']  # row['alternativeTitle'].language
 
         if row['abstract'] is not None:
-            result += "abstract=%s\n" % row['abstract'].replace('\n', ' ').replace('\r', '')  # row['abstract'].language
+            result += "abstract=%s\n" % row['abstract'].replace('\n',
+                                                                ' ').replace(
+                '\r', '')  # row['abstract'].language
 
         if row['language'] is not None:
             result += "language=%s\n" % (row['language'][-3:].lower())
@@ -223,22 +237,27 @@ def convert(rdf):
 
         if row['topicCategory'] is not None:
             result += "topiccategory=%s\n" % row['topicCategory'][
-                                             len("http://inspire.ec.europa.eu/metadata-codelist/TopicCategory/"):]
+                                             len(
+                                                 "http://inspire.ec.europa.eu/metadata-codelist/TopicCategory/"):]
 
         if row['status'] is not None:
-            result += "status=%s\n" % row['status'][len("http://purl.org/adms/status/"):]
+            result += "status=%s\n" % row['status'][
+                                      len("http://purl.org/adms/status/"):]
 
         if row['url'] is not None:
-            result += "url=%s\n" % row['url']  # include language tag? row['url'].language
+            result += "url=%s\n" % row[
+                'url']  # include language tag? row['url'].language
 
         if row['limitation'] is not None:
-            result += "limitation=%s\n" % row['limitation']  # include language tag?
+            result += "limitation=%s\n" % row[
+                'limitation']  # include language tag?
 
         if row['licenseUrl'] is not None:
             result += "license=%s\n" % row['licenseUrl']
 
         if row['other_constraints'] is not None:
-            result += "otherconstraints=%s\n" % row['other_constraints']  # include language tag?
+            result += "otherconstraints=%s\n" % row[
+                'other_constraints']  # include language tag?
 
         if row['maintenance_frequency'] is not None:
             maintenance_frequency = row['maintenance_frequency'][len(
@@ -316,7 +335,8 @@ def convert(rdf):
 
     for thesaurus in keywords.keys():
         result += '\n[%s]\n' % thesaurus
-        result += 'keywords=%s\n' % ','.join(keywords[thesaurus])  # keywords_nl? language[thesaurus]
+        result += 'keywords=%s\n' % ','.join(
+            keywords[thesaurus])  # keywords_nl? language[thesaurus]
         result += 'issued=%s\n' % issued[thesaurus]
         if row['scheme_type'] is not None:
             result += 'keywords_type=%s\n' % row['scheme_type']
@@ -374,12 +394,14 @@ def convert(rdf):
         p = re.compile(r'1:[0-9]+')
         match = re.search(p, comment)
         if match:
-            result += 'resolution=%s\n' % comment[match.start() + 2:match.end()]
+            result += 'resolution=%s\n' % comment[
+                                          match.start() + 2:match.end()]
         else:
             p = re.compile(r'[0-9.,]+')
             match = re.search(p, comment)
             if match:
-                result += 'resolution_d=%s\n' % comment[match.start():match.end()]
+                result += 'resolution_d=%s\n' % comment[
+                                                match.start():match.end()]
                 result += 'resolution_d_m=%s\n' % comment[match.end():]
 
     for geometry in geometries:
@@ -391,7 +413,8 @@ def convert(rdf):
             for coordinate in geometry_obj['coordinates'][0]:
                 x.add(coordinate[0])
                 y.add(coordinate[1])
-            result += "bbox=%s\n" % ",".join([str(min(x)), str(min(y)), str(max(x)), str(max(y))])
+            result += "bbox=%s\n" % ",".join(
+                [str(min(x)), str(min(y)), str(max(x)), str(max(y))])
 
     def extract_contact(g, role, category):
         res = ""
@@ -429,7 +452,8 @@ def convert(rdf):
 
             for r in qr:
                 if r['organization'] is not None:
-                    res += "organization=%s\n" % r['organization']  # r['organization'].language
+                    res += "organization=%s\n" % r[
+                        'organization']  # r['organization'].language
                 if r['email'] is not None:
                     res += "email=%s\n" % r['email'][len('mailto:'):]
                 if r['url'] is not None:
@@ -474,7 +498,8 @@ def convert(rdf):
 
     for row in qres:
         if row['url'] is not None:
-            landing_pages[row['url']] = {'title': row['title'], 'description': row['description']}
+            landing_pages[row['url']] = {'title': row['title'],
+                                         'description': row['description']}
 
     i = 0
     for landing_page in landing_pages.keys():
@@ -486,7 +511,8 @@ def convert(rdf):
                 'title']  # landing_pages[landing_page]['title'].language
         if landing_pages[landing_page]['description'] is not None:
             result += "description=%s\n" % landing_pages[landing_page][
-                'description']  # landing_pages[landing_page]['description'].language
+                'description']
+            # landing_pages[landing_page]['description'].language
 
     qres = g.query(
         PREFIXES +
@@ -509,8 +535,11 @@ def convert(rdf):
         else:
             distribution_format = row['format']
 
-        distributions[row['distribution']] = {'title': row['title'], 'format': distribution_format,
-                                              'description': row['description'], 'url': row['accessURL'],
+        distributions[row['distribution']] = {'title': row['title'],
+                                              'format': distribution_format,
+                                              'description': row[
+                                                  'description'],
+                                              'url': row['accessURL'],
                                               'page': row['page']}
 
     for distribution in distributions.keys():
@@ -526,8 +555,10 @@ def convert(rdf):
         if distributions[distribution]['format'] is not None:
             result += "format=%s\n" % distributions[distribution]['format']
         if distributions[distribution]['title'] is not None:
-            result += "name=%s\n" % distributions[distribution]['title']  # languages?
+            result += "name=%s\n" % distributions[distribution][
+                'title']  # languages?
         if distributions[distribution]['description'] is not None:
-            result += "description=%s\n" % distributions[distribution]['description']  # languages?
+            result += "description=%s\n" % distributions[distribution][
+                'description']  # languages?
 
     return result
