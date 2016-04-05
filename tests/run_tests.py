@@ -188,7 +188,8 @@ class PygeometaTest(unittest.TestCase):
 
         # no schema provided
         with self.assertRaises(AttributeError):
-            render_template(get_abspath('../sample.mcf'))
+            with self.assertRaises(RuntimeError):
+                render_template(get_abspath('../sample.mcf'))
 
         # bad schema provided
         with self.assertRaises(RuntimeError):
