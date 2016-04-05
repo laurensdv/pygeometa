@@ -262,7 +262,6 @@ class PygeometaTest(unittest.TestCase):
         mcf2 = get_values(mcf2)
         self.assertSetEqual(mcf1, mcf2)
 
-
     # XML -> RDF -{1}> XML -> RDF -{2}> XML: {1} ?== {2}
     def test_xml_lossless(self):
         test_files = [
@@ -322,6 +321,7 @@ class PygeometaTest(unittest.TestCase):
             mcf1 = get_values(mcf1)
             mcf2 = get_values(mcf2)
             self.assertSetEqual(mcf1, mcf2)
+
 
 def get_abspath(filepath):
     """helper function absolute file access"""

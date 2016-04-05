@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/geopython/pygeometa.png)](https://travis-ci.org/geopython/pygeometa)
+[![Build Status](https://travis-ci.org/laurensdv/pygeometa.png)](https://travis-ci.org/geopython/pygeometa)
 
 # pygeometa [geodcat-ap mod]
 
