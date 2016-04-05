@@ -81,7 +81,7 @@ def process_args(mcf, rdf, xml, html, validate, schema, schema_local, output):
                 if schema is not None:
                     profiles = schema.split(',')
                 else:
-                    profiles = ["iso19139"]
+                    profiles = ["iso19139latest"]
                 v = Validators(profiles)
                 t_output = v.is_valid(ET.parse(open(xml)))
 

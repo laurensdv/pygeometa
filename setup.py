@@ -145,7 +145,11 @@ def find_packages_templates(location='.'):
     return {'pygeometa': ['templates/*/*.j2',
                           'transformations/*/*.x*',
                           'transformations/*/*/*.x*',
-                          'transformations/*/*/*/*.x*']}
+                          'transformations/*/*/*/*.x*',
+                          'validation/xml/*/*.[xsd]*',
+                          'validation/xml/*/*/*.[xsd]*',
+                          'validation/xml/*/*/*/*.[xsd]*',
+                          ]}
 
 setup(
     name='pygeometa',

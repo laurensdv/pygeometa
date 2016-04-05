@@ -64,6 +64,23 @@ class XsdValidator(BaseValidator):
         return True, []
 
 
+class ISO19139SchemaLatest(XsdValidator):
+    name = 'iso19139latest'
+    title = 'ISO19139 XSD Schema 2011'
+
+    @classmethod
+    def is_valid(cls, xml):
+        xsd_path = 'xml/iso19139latest'
+        gmx_xsd_filepath = os.path.join(os.path.dirname(__file__),
+                                        xsd_path, 'gmx/gmx.xsd')
+        xsd_name = 'Dataset schema (gmx.xsd)'
+        is_valid, errors = cls._is_valid(xml, gmx_xsd_filepath, xsd_name)
+        if not is_valid:
+            # TODO: not sure if we need this one, keeping for backwards compatibility
+            errors.insert(0, ('{0} Validation Error'.format(xsd_name), None))
+        return is_valid, errors
+
+
 class ISO19139Schema(XsdValidator):
     name = 'iso19139'
     title = 'ISO19139 XSD Schema'
@@ -309,9 +326,10 @@ class Gemini2Schematron13(SchematronValidator):
             return [cls.schematron(schema)]
 
 
-all_validators = (ISO19139Schema,
-                  ISO19139EdenSchema,
-                  ISO19139NGDCSchema,
+all_validators = (  # ISO19139Schema,
+                  ISO19139SchemaLatest,
+                    # ISO19139EdenSchema,
+                    # ISO19139NGDCSchema,
                   FGDCSchema,
                   ConstraintsSchematron,
                   ConstraintsSchematron14,
