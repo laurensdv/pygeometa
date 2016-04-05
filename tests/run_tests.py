@@ -99,12 +99,13 @@ def get_values(mcf1):
                                 values.add(normalize_space(c))
 
             else:
-                try:
-                    values.add(D.parse(v).strftime("%d-%m-%y"))
-                except ValueError:
-                    values.add(normalize_space(v))
-                except TypeError:
-                    values.add(normalize_space(v))
+                if '__name__' not in k:
+                    try:
+                        values.add(D.parse(v).strftime("%d-%m-%y"))
+                    except ValueError:
+                        values.add(normalize_space(v))
+                    except TypeError:
+                        values.add(normalize_space(v))
     return values
 
 
