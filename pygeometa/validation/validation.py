@@ -326,10 +326,10 @@ class Gemini2Schematron13(SchematronValidator):
             return [cls.schematron(schema)]
 
 
-all_validators = (  # ISO19139Schema,
+all_validators = (ISO19139Schema,
                   ISO19139SchemaLatest,
-                    # ISO19139EdenSchema,
-                    # ISO19139NGDCSchema,
+                  ISO19139EdenSchema,
+                  ISO19139NGDCSchema,
                   FGDCSchema,
                   ConstraintsSchematron,
                   ConstraintsSchematron14,
