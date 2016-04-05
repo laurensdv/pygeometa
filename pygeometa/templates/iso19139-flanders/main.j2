@@ -18,11 +18,13 @@
   <gmd:hierarchyLevel>
     <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeSpace="ISOTC211/19115" codeListValue="{{ record['metadata']['hierarchylevel'] }}">{{ record['metadata']['hierarchylevel'] }}</gmd:MD_ScopeCode>
   </gmd:hierarchyLevel>
+  {% if record['contact:main'] %}
   {% set contact = record['contact:main'] %}
   {% set role = 'pointOfContact' %}
   <gmd:contact>
   {% include "contact.j2" %}
   </gmd:contact>
+  {% endif %}
   <gmd:dateStamp>
     {% set datestamp = record['metadata']['datestamp']|normalize_datestring %}
     {% if datestamp|length > 11 %}
@@ -34,15 +36,11 @@
   <gmd:metadataStandardName>
     {% if record['metadata']['metadatastandardname'] %}
     <gco:CharacterString>{{ record['metadata']['metadatastandardname'] }}</gco:CharacterString>
-    {% else %}
-    <gco:CharacterString>ISO 19115:2003 - Geographic information - Metadata</gco:CharacterString>
     {% endif %}
   </gmd:metadataStandardName>
   <gmd:metadataStandardVersion>
     {% if record['metadata']['metadatastandardversion'] %}
     <gco:CharacterString>{{ record['metadata']['metadatastandardversion'] }}</gco:CharacterString>
-    {% else %}
-    <gco:CharacterString>ISO 19115:2003</gco:CharacterString>
     {% endif %}
   </gmd:metadataStandardVersion>
   <gmd:dataSetURI>
@@ -134,6 +132,27 @@
       <gmd:status>
         <gmd:MD_ProgressCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ProgressCode" codeSpace="ISOTC211/19115" codeListValue="{{ record['identification']['status'] }}">{{ record['identification']['status'] }}</gmd:MD_ProgressCode>
       </gmd:status>
+      {% if record['contact:custodian'] %}
+      {% set contact = record['contact:custodian'] %}
+      {% set role = 'custodian' %}
+      <gmd:pointOfContact>
+      {% include "contact.j2" %}
+      </gmd:pointOfContact>
+      {% endif %}
+      {% if record['contact:owner'] %}
+      {% set contact = record['contact:owner'] %}
+      {% set role = 'owner' %}
+      <gmd:pointOfContact>
+      {% include "contact.j2" %}
+      </gmd:pointOfContact>
+      {% endif %}
+      {% if record['contact:author'] %}
+      {% set contact = record['contact:author'] %}
+      {% set role = 'author' %}
+      <gmd:pointOfContact>
+      {% include "contact.j2" %}
+      </gmd:pointOfContact>
+      {% endif %}
       <gmd:resourceMaintenance>
         <gmd:MD_MaintenanceInformation>
           <gmd:maintenanceAndUpdateFrequency>
@@ -325,6 +344,7 @@
       </gmd:distributionFormat>
       {% endif %}
       {% endfor %}
+      {% if record['contact:distribution'] %}
       <gmd:distributor>
         <gmd:MD_Distributor>
           <gmd:distributorContact>
@@ -338,6 +358,7 @@
           </gmd:distributorContact>
         </gmd:MD_Distributor>
       </gmd:distributor>
+      {% endif %}
       <gmd:transferOptions>
         <gmd:MD_DigitalTransferOptions>
         {% for k, v in record.items() %}

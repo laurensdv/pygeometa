@@ -34,6 +34,7 @@
           {{ cs.get_freetext('electronicMailAddress', record['metadata']['language_alternate'], get_charstring('email', contact, record['metadata']['language'], record['metadata']['language_alternate'])) }}
         </gmd:CI_Address>
       </gmd:address>
+      {% if contact['url'] %}
       <gmd:onlineResource>
         <gmd:CI_OnlineResource>
           <gmd:linkage>
@@ -44,6 +45,7 @@
           </gmd:protocol>
         </gmd:CI_OnlineResource>
       </gmd:onlineResource>
+      {% endif %}
       {{ cs.get_freetext('hoursOfService', record['metadata']['language_alternate'], get_charstring('hoursofservice', contact, record['metadata']['language'], record['metadata']['language_alternate'])) }}
       {{ cs.get_freetext('contactInstructions', record['metadata']['language_alternate'], get_charstring('contactinstructions', contact, record['metadata']['language'], record['metadata']['language_alternate'])) }}
     </gmd:CI_Contact>

@@ -983,7 +983,7 @@
                     <xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution">
                         <!-- Encoding -->
                         <xsl:variable name="Encoding">
-                            <xsl:apply-templates select="gmd:distributionFormat/gmd:MD_Format/gmd:name/*"/>
+                            <xsl:apply-templates select="gmd:distributionFormat/gmd:MD_Format/gmd:name"/>
                         </xsl:variable>
                         <!-- Resource locators (access / download URLs) -->
                         <xsl:for-each select="gmd:transferOptions/*/gmd:onLine/*">
@@ -2321,7 +2321,7 @@
 
     <!-- Encoding -->
 
-    <xsl:template name="Encoding" match="gmd:distributionFormat/gmd:MD_Format/gmd:name/*">
+    <xsl:template name="Encoding" match="gmd:distributionFormat/gmd:MD_Format/gmd:name">
         <xsl:choose>
             <xsl:when test="@xlink:href and @xlink:href != ''">
                 <dct:format rdf:resource="{@xlink:href}"/>

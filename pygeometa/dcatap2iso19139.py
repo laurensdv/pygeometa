@@ -422,34 +422,41 @@ def convert(rdf):
                   } .
                } LIMIT 1""" % role)
 
-        res += '\n[contact:%s]\n' % category
+        if len(qr) > 0 and qr is not None:
+            res += '\n[contact:%s]\n' % category
 
-        for r in qr:
-            if r['organization'] is not None:
-                res += "organization=%s\n" % r['organization']  # r['organization'].language
-            if r['email'] is not None:
-                res += "email=%s\n" % r['email'][len('mailto:'):]
-            if r['url'] is not None:
-                res += "url=%s\n" % r['url']
-            if r['title'] is not None:
-                res += "positionname=%s\n" % r['title']
-            if r['name'] is not None:
-                res += "individualname=%s\n" % r['name']
-            if r['phone'] is not None:
-                res += "phone=%s\n" % r['phone'][len('tel:'):]
-            if r['faxno'] is not None:
-                res += "fax=%s\n" % r['faxno'][len('tel:'):]
-            if r['address'] is not None:
-                res += "address=%s\n" % r['street']
-                res += "city=%s\n" % r['city']
-                res += "postalcode=%s\n" % r['postalcode']
-                res += "country=%s\n" % r['country']
+            for r in qr:
+                if r['organization'] is not None:
+                    res += "organization=%s\n" % r['organization']  # r['organization'].language
+                if r['email'] is not None:
+                    res += "email=%s\n" % r['email'][len('mailto:'):]
+                if r['url'] is not None:
+                    res += "url=%s\n" % r['url']
+                if r['title'] is not None:
+                    res += "positionname=%s\n" % r['title']
+                if r['name'] is not None:
+                    res += "individualname=%s\n" % r['name']
+                if r['phone'] is not None:
+                    res += "phone=%s\n" % r['phone'][len('tel:'):]
+                if r['faxno'] is not None:
+                    res += "fax=%s\n" % r['faxno'][len('tel:'):]
+                if r['address'] is not None:
+                    res += "address=%s\n" % r['street']
+                    res += "city=%s\n" % r['city']
+                    res += "postalcode=%s\n" % r['postalcode']
+                    res += "country=%s\n" % r['country']
 
         return res
 
     result += extract_contact(g, 'pointOfContact', 'main')
 
     result += extract_contact(g, 'distributor', 'distribution')
+
+    result += extract_contact(g, 'author', 'author')
+
+    result += extract_contact(g, 'owner', 'owner')
+
+    result += extract_contact(g, 'custodian', 'custodian')
 
     qres = g.query(
         PREFIXES +
@@ -484,7 +491,8 @@ def convert(rdf):
               ?distribution a dcat:Distribution .
               OPTIONAL { ?distribution dc:title ?title } .
               OPTIONAL { ?distribution dc:description ?description } .
-              OPTIONAL { ?distribution dc:format ?format } .
+              OPTIONAL { ?distribution dc:format ?format .
+                         OPTIONAL { ?format rdfs:label ?formatLabel } } .
               OPTIONAL { ?distribution dcat:accessURL ?accessURL } .
               OPTIONAL { ?distribution foaf:page ?page } .
            }""")
@@ -492,7 +500,12 @@ def convert(rdf):
     distributions = {}
 
     for row in qres:
-        distributions[row['distribution']] = {'title': row['title'], 'format': row['format'], 'description': row['description'], 'url': row['accessURL'], 'page': row['page']}
+        if row['formatLabel'] is not None:
+            distribution_format = row['formatLabel']
+        else:
+            distribution_format = row['format']
+
+        distributions[row['distribution']] = {'title': row['title'], 'format': distribution_format, 'description': row['description'], 'url': row['accessURL'], 'page': row['page']}
 
     for distribution in distributions.keys():
         i += 1
