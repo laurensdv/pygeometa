@@ -74,6 +74,7 @@ TEMPLATES = '%s%stemplates' % (os.path.dirname(os.path.realpath(__file__)),
 TRANSFORMATIONS = '%s%stransformations' % (os.path.dirname(os.path.realpath(__file__)),
                                            os.sep)
 
+
 def get_charstring(option, section_items, language,
                    language_alternate=None):
     """convenience function to return unilingual or multilingual value(s)"""
@@ -274,6 +275,7 @@ def dcat_to_iso(rdf, schema=None, schema_local=None):
         schema = 'iso19139-flanders'  # Flanders schema by default
 
     return render_template(fp, schema, schema_local)
+
 
 def get_supported_schemas():
     """returns a list of supported schemas"""

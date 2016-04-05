@@ -59,7 +59,7 @@ from pygeometa import (read_mcf, pretty_print,
 from pygeometa import (iso_to_dcat)
 from pygeometa.dcatap2iso19139 import convert
 
-from dateutil.parser import parse
+import dateutil.parser as D
 
 THISDIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -91,7 +91,7 @@ def get_values(mcf1):
                 for t, c in iteritems(v):
                     if c and c is not None:
                         try:
-                            values.add(parse(c).strftime("%d-%m-%y"))  # convert timestamps to same format
+                            values.add(D.parse(c).strftime("%d-%m-%y"))  # convert timestamps to same format
                         except ValueError:
                             values.add(normalize_space(c))
                         except TypeError:
@@ -99,7 +99,7 @@ def get_values(mcf1):
 
             else:
                 try:
-                    values.add(parse(v).strftime("%d-%m-%y"))
+                    values.add(D.parse(v).strftime("%d-%m-%y"))
                 except ValueError:
                     values.add(normalize_space(v))
                 except TypeError:
@@ -109,6 +109,7 @@ def get_values(mcf1):
 
 class PygeometaTest(unittest.TestCase):
     """Test suite for package pygeometa"""
+
     def setUp(self):
         """setup test fixtures, etc."""
 
@@ -265,9 +266,9 @@ class PygeometaTest(unittest.TestCase):
     # XML -> RDF -{1}> XML -> RDF -{2}> XML: {1} ?== {2}
     def test_xml_lossless(self):
         test_files = [
-                      './sample_conversions/ds_md_ispra-0001.xml'
-                      , './sample_conversions/srv_md_ispra-0001.xml'
-                      ]
+            './sample_conversions/ds_md_ispra-0001.xml',
+            './sample_conversions/srv_md_ispra-0001.xml'
+        ]
 
         for t in test_files:
             # XML -> RDF

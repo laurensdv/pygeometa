@@ -103,7 +103,8 @@ def convert(rdf):
     for row in qres:
         if row['hierarchyLevel'] is not None:
             if "spatialdataservicetype" in row['hierarchyLevel'].lower():
-                result += "spatialdataservicetype=%s\n" % row['hierarchyLevel'].lower()[row['hierarchyLevel'].rfind('/')+1:]
+                result += "spatialdataservicetype=%s\n" % row['hierarchyLevel'].lower()[
+                                                          row['hierarchyLevel'].rfind('/') + 1:]
             elif "hierarchylevel" not in result:
                 if "dataset" in row['hierarchyLevel'].lower():
                     result += "hierarchylevel=dataset\n"
@@ -307,14 +308,15 @@ def convert(rdf):
                 issued[row['scheme_title']] = row['scheme_issued']
 
     if len(keywords_no_category) > 0:
-        result += 'keywords=%s\n' % ','.join(keywords_no_category) # keywords_nl? (list(keywords_no_category)[0].language,
+        result += 'keywords=%s\n' % ','.join(
+            keywords_no_category)  # keywords_nl? (list(keywords_no_category)[0].language,
 
     if len(keywords.keys()) > 0:
         result += 'thesauri=%s\n' % '\/'.join(keywords.keys())
 
     for thesaurus in keywords.keys():
         result += '\n[%s]\n' % thesaurus
-        result += 'keywords=%s\n' % ','.join(keywords[thesaurus]) # keywords_nl? language[thesaurus]
+        result += 'keywords=%s\n' % ','.join(keywords[thesaurus])  # keywords_nl? language[thesaurus]
         result += 'issued=%s\n' % issued[thesaurus]
         if row['scheme_type'] is not None:
             result += 'keywords_type=%s\n' % row['scheme_type']
@@ -348,7 +350,8 @@ def convert(rdf):
 
     for row in qres:
         if row['datatype'] is not None and 'datatype' not in result:
-            result += 'datatype=%s\n' % row['datatype'][row['datatype'].rfind('/')+1:]  # What if there are multiple datatypes: i.e. multiple distributions - different datatypes?
+            result += 'datatype=%s\n' % row['datatype'][row['datatype'].rfind(
+                '/') + 1:]  # What if there are multiple datatypes: i.e. multiple distributions - different datatypes?
 
         if "crs=" not in result:
             if row['crsl'] is not None:
@@ -371,14 +374,13 @@ def convert(rdf):
         p = re.compile(r'1:[0-9]+')
         match = re.search(p, comment)
         if match:
-            result += 'resolution=%s\n' % comment[match.start()+2:match.end()]
+            result += 'resolution=%s\n' % comment[match.start() + 2:match.end()]
         else:
             p = re.compile(r'[0-9.,]+')
             match = re.search(p, comment)
             if match:
                 result += 'resolution_d=%s\n' % comment[match.start():match.end()]
                 result += 'resolution_d_m=%s\n' % comment[match.end():]
-
 
     for geometry in geometries:
         if "JSON" in geometry.datatype.upper():  # TODO: support for other formats as well
@@ -480,9 +482,11 @@ def convert(rdf):
         result += "\n[distribution:url%s]\n" % str(i)
         result += "url=%s\n" % landing_page
         if landing_pages[landing_page]['title'] is not None:
-            result += "name=%s\n" % landing_pages[landing_page]['title']  # landing_pages[landing_page]['title'].language
+            result += "name=%s\n" % landing_pages[landing_page][
+                'title']  # landing_pages[landing_page]['title'].language
         if landing_pages[landing_page]['description'] is not None:
-            result += "description=%s\n" % landing_pages[landing_page]['description']  # landing_pages[landing_page]['description'].language
+            result += "description=%s\n" % landing_pages[landing_page][
+                'description']  # landing_pages[landing_page]['description'].language
 
     qres = g.query(
         PREFIXES +
@@ -505,7 +509,9 @@ def convert(rdf):
         else:
             distribution_format = row['format']
 
-        distributions[row['distribution']] = {'title': row['title'], 'format': distribution_format, 'description': row['description'], 'url': row['accessURL'], 'page': row['page']}
+        distributions[row['distribution']] = {'title': row['title'], 'format': distribution_format,
+                                              'description': row['description'], 'url': row['accessURL'],
+                                              'page': row['page']}
 
     for distribution in distributions.keys():
         i += 1

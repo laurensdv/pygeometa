@@ -133,20 +133,19 @@ def find_packages(path, base=''):
 def find_packages_templates(location='.'):
     """get dirs to be specified as package_data keys (templates)"""
 
-    packages = []
-    for root, dirs, files in os.walk(location):
-        if 'templates' in dirs:  # include as a package_data key
-            packages.append(root.replace(os.sep, '.').replace('..', ''))
-
-        if 'transformations' in dirs:  # include as a package_data key
-            packages.append(root.replace(os.sep, '.').replace('..', ''))
+    # packages = []
+    # for root, dirs, files in os.walk(location):
+    #     if 'templates' in dirs:  # include as a package_data key
+    #         packages.append(root.replace(os.sep, '.').replace('..', ''))
+    #
+    #     if 'transformations' in dirs:  # include as a package_data key
+    #         packages.append(root.replace(os.sep, '.').replace('..', ''))
+    # return packages
 
     return {'pygeometa': ['templates/*/*.j2',
                           'transformations/*/*.x*',
                           'transformations/*/*/*.x*',
                           'transformations/*/*/*/*.x*']}
-    #return packages
-
 
 setup(
     name='pygeometa',
