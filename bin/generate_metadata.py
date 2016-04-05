@@ -49,6 +49,7 @@ import click
 from lxml import etree as ET
 
 from pygeometa import get_supported_schemas, render_template, iso_to_dcat, dcat_to_iso, iso_to_html
+from pygeometa.validation.validation import Validators
 
 SUPPORTED_SCHEMAS = get_supported_schemas()
 
@@ -65,7 +66,8 @@ SUPPORTED_SCHEMAS = get_supported_schemas()
               help='Path to ISO-19139 metadata file (.xml)')
 @click.option('--output', type=click.File('wb'),
               help='Name of output file')
-@click.option('--html', is_flag=True)
+@click.option('--html', is_flag=True, help='Output HTML')
+@click.option('--validate', is_flag=True, help='Validate XML')
 @click.option('--schema',
               type=click.Choice(SUPPORTED_SCHEMAS),
               help='Metadata schema')
@@ -73,9 +75,17 @@ SUPPORTED_SCHEMAS = get_supported_schemas()
               type=click.Path(exists=True, resolve_path=True,
                               dir_okay=True, file_okay=False),
               help='Locally defined metadata schema')
-def process_args(mcf, rdf, xml, html, schema, schema_local, output):
+def process_args(mcf, rdf, xml, html, validate, schema, schema_local, output):
     if xml is not None and rdf is None:
-        if html:
+        if validate:
+                if schema is not None:
+                    profiles = schema.split(',')
+                else:
+                    profiles = ["iso19139"]
+                v = Validators(profiles)
+                t_output = v.is_valid(ET.parse(open(xml)))
+
+        elif html:
             t_output = iso_to_html(xml, schema=schema, schema_local=schema_local)
         else:
             t_output = iso_to_dcat(xml, schema=schema, schema_local=schema_local)
