@@ -1,3 +1,6 @@
+The license below applies only to the original pygeometa code.
+For information about the license of the modifications/extensions please contact the owner of this repository.
+
 Terms and Conditions of Use
 ===========================
 
