@@ -49,7 +49,7 @@ import click
 from lxml import etree as ET
 
 from pygeometa import get_supported_schemas, render_template, iso_to_dcat, dcat_to_iso, iso_to_html
-from pygeometa.validation.validation import Validators
+from pygeometa.validation.validator import Validators
 
 SUPPORTED_SCHEMAS = get_supported_schemas()
 

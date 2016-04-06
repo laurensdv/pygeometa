@@ -32,8 +32,12 @@ prefix iso: <http://def.seegrid.csiro.au/isotc211/iso19115/2003/metadata#>
 
 def convert(rdf):
     g = rdflib.Graph()
-    g.parse(os.path.realpath(rdf),
-            format=rdflib.util.guess_format(os.path.realpath(rdf)))
+    if rdf.endswith('.xml'):
+        g.parse(os.path.realpath(rdf),
+                format='xml')
+    else:
+        g.parse(os.path.realpath(rdf),
+                format=rdflib.util.guess_format(os.path.realpath(rdf)))
 
     result = ""
     qres = g.query(  # Mandatory -> required; Optional -> OPTIONAL
@@ -75,13 +79,35 @@ def convert(rdf):
             PREFIXES +
             """SELECT DISTINCT *
                WHERE {
-                  { ?uri a dcat:Dataset } UNION { ?uri a dc:Service } .
-                  OPTIONAL { ?uri dct:identifier ?identifier } .
-                  OPTIONAL { ?uri dct:issued ?issued } .
+                  { { ?uri a dcat:Dataset } UNION { ?uri a dc:Service } } UNION { ?uri a <http://www.opengis.net/cat/csw/2.0.2Record> } .
+                  OPTIONAL { { ?uri dc11:title ?title } UNION { ?uri dc:title ?title } } .
+                  OPTIONAL { ?uri dc:abstract ?abstract } .
+                  OPTIONAL { { ?uri dc11:identifier ?identifier } UNION { ?uri dc:identifier ?identifier } } .
+                  OPTIONAL { ?uri dc:issued ?issued } .
+                  OPTIONAL { { ?uri dc:type ?type } UNION { ?uri dc11:type ?type } } .
                } LIMIT 1""")
+
+        abstract = None
+        title = None
 
         for row in qres:
             if row['uri'] is not None:
+                if row['abstract'] is not None:
+                    abstract = row['abstract']
+
+                if row['title'] is not None:
+                    title = row['title']
+
+                if row['type'] is not None:
+                    if "dataset" in row['type'].lower():
+                        result += "hierarchylevel=dataset\n"
+                    elif "service" in row['type'].lower():
+                        result += "hierarchylevel=service\n"
+                    elif "catalog" in row['type'].lower():
+                        result += "hierarchylevel=discovery\n"
+                    elif "series" in row['type'].lower():
+                        result += "hierarchylevel=series\n"
+
                 if row['identifier'] is not None:
                     result += "identifier=%s\n" % row['identifier']
                 else:
@@ -207,6 +233,8 @@ def convert(rdf):
         if row['title'] is not None:
             result += "title=%s\n" % row[
                 'title']  # title_nl?  row['title'].language
+        elif title is not None:
+            result += "title=%s\n" % title
 
         if row['alternativeTitle'] is not None:
             result += "alternative_title=%s\n" % row[
@@ -216,6 +244,8 @@ def convert(rdf):
             result += "abstract=%s\n" % row['abstract'].replace('\n',
                                                                 ' ').replace(
                 '\r', '')  # row['abstract'].language
+        elif abstract is not None:
+            result += "abstract=%s\n" % abstract
 
         if row['language'] is not None:
             result += "language=%s\n" % (row['language'][-3:].lower())
@@ -327,11 +357,11 @@ def convert(rdf):
             if row['scheme_issued'] is not None:
                 issued[row['scheme_title']] = row['scheme_issued']
 
-    if len(keywords_no_category) > 0:
+    if keywords_no_category and len(keywords_no_category) > 0:
         result += 'keywords=%s\n' % ','.join(
             keywords_no_category)  # keywords_nl? (list(keywords_no_category)[0].language,
 
-    if len(keywords.keys()) > 0:
+    if keywords and len(keywords.keys()) > 0:
         result += 'thesauri=%s\n' % '\/'.join(keywords.keys())
 
     for thesaurus in keywords.keys():

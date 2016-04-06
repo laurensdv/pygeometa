@@ -59,6 +59,8 @@ from pygeometa import (read_mcf, pretty_print,
 from pygeometa import (iso_to_dcat)
 from pygeometa.dcatap2iso19139 import convert
 
+from pygeometa.validation.validator import Validators
+
 import dateutil.parser as D
 
 THISDIR = os.path.dirname(os.path.realpath(__file__))
@@ -277,6 +279,39 @@ class PygeometaTest(unittest.TestCase):
             mcf1 = get_values(mcf1)
             mcf2 = get_values(mcf2)
             self.assertSetEqual(mcf1, mcf2)
+
+    def test_rdf2xml_valid(self):
+        """Test Valid RDF2XML Conversion"""
+
+        """Test RDF2XML2RDF"""
+
+        test_files = [
+            './sample_conversions/afghanistan_election_data.ttl',
+            './sample_conversions/malawi-aid-projects.ttl',
+            './sample_conversions/newcastle-city-council-payments-over-500.ttl',
+        ]
+
+        for t in test_files:
+            # RDF -> XML
+            rdf = get_abspath(t)
+            result = convert(rdf)
+            _, fp = tempfile.mkstemp()
+
+            with codecs.open(fp, 'w', encoding='utf-8') as f:
+                f.write(u'%s' % result)
+            f.close()
+
+            xml = render_template(fp, schema='iso19139-flanders')
+
+            _, xp = tempfile.mkstemp()
+            f = open(xp, 'wb')
+            xml.write(f)
+            f.close()
+
+            v = Validators(["iso19139latest"])
+            valid, _, _ = v.is_valid(ET.parse(open(xp)))
+
+            self.assertTrue(valid, '%s does not validate!' % t)
 
     # XML -> RDF -{1}> XML -> RDF -{2}> XML: {1} ?== {2}
     def test_xml_lossless(self):

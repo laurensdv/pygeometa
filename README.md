@@ -35,19 +35,6 @@ pygeometa is a Python package to generate metadata for geospatial datasets. Meta
 * extensible: template architecture allows for easy addition of new metadata formats
 * flexible: use as a command-line tool or integrate as a library
 
-## Quickstart
-
-Workflow to generate metadata XML:
-
-1. Install pygeometa
-2. Create a 'metadata control file' .mcf file that contains metadata information 
-  1. Modify the [sample.mcf](https://github.com/geopython/pygeometa/blob/master/sample.mcf) example
-  2. pygeometa supports nesting MCF files together, allowing providing a single MCF file for common metadata parameters (e.g. common contact information)
-  3. Refer to the [Metadata Control File Reference documentation](https://github.com/geopython/pygeometa/blob/master/doc/MCF_Reference.md) 
-3. Run pygeometa for the .mcf file with a specified target metadata schema
-
-
-
 ## Installation
 
 pygeometa is best installed and used within a Python virtualenv.
@@ -88,6 +75,23 @@ generate_metadata.py --rdf=path/to/file.xml # to stdout
 generate_metadata.py --rdf=path/to/file.rdf --output=some_file.xml # to file
 ```
 
+With xml source files you can choose to include a:
+
+* `--html` flag, you can choose to convert the xml to HTML
+instead of GeoDCAT-AP RDF.
+```bash
+generate_metadata.py --xml=path/to/file.xml --html # to stdout
+generate_metadata.py --xml=path/to/file.xml --html --output=some_file.html # to file
+```
+* `--validate` flag to
+check if the xml is valid against the latest iso19139. If you include a
+schema parameter you can define another supported schema against which the
+xml should be validated. The file will not be converted to GeoDCAT-AP RDF.
+```bash
+generate_metadata.py --xml=path/to/file.xml --validate # to stdout
+generate_metadata.py --xml=path/to/file.xml --validate --output=some_file # to file
+```
+
 ### Supported schemas
 Schemas supported by this pygeometa branch:
 * iso-19139-to-dcat-ap, tweaked version of the EU ISO19139->GeoDCAT-AP conversion
@@ -113,9 +117,29 @@ xml_output = dcat_to_iso('/path/to/file.rdf')
 # user-defined schemas
 rdf_output = iso_to_dcat('/path/to/file.xml', schema_local='/path/to/new-schema.xsl')
 xml_output = dcat_to_iso('/path/to/file.rdf', schema_local='/path/to/new-schema')
+
+# validation
+from pygeometa.validation.validation import Validators
+from lxml import etree
+
+profiles = ["iso19139latest"] # or another profile
+xml = '/path/to/file.xml'
+v = Validators(profiles)
+v_results = v.is_valid(etree.parse(open(xml)))
 ```
 
 ## Running MCF/ISO19139 transformations
+
+## Quickstart
+
+Workflow to generate metadata XML:
+
+1. Install pygeometa
+2. Create a 'metadata control file' .mcf file that contains metadata information
+  1. Modify the [sample.mcf](https://github.com/geopython/pygeometa/blob/master/sample.mcf) example
+  2. pygeometa supports nesting MCF files together, allowing providing a single MCF file for common metadata parameters (e.g. common contact information)
+  3. Refer to the [Metadata Control File Reference documentation](https://github.com/geopython/pygeometa/blob/master/doc/MCF_Reference.md)
+3. Run pygeometa for the .mcf file with a specified target metadata schema
 
 ### From the command line
 
@@ -175,21 +199,19 @@ cd tests
 python run_tests.py
 ```
 
-### Code Conventions
-
-* [PEP8](https://www.python.org/dev/peps/pep-0008)
-
 ### Bugs and Issues
 
 All bugs, enhancements and issues are managed on [GitHub](https://github.com/laurensdv/pygeometa/issues).
 
 ## History
 
-this pygeometadata branch intends to make it easy to transform iso19139 -> geodcat-ap and vise versa.
+This pygeometadata branch intends to make it possible to transform iso19139 ->
+geodcat-ap and vise versa (maximizing losslessness and validity).
 
 pygeometa originated within an internal project called pygdm, which provided generic geospatial data management functions.  pygdm (now at end of life) was used for generating MSC/CMC geospatial metadata.  pygeometa was pulled out of pygdm to focus on the core requirement of generating geospatial metadata within a real-time environment.
 
-In 2015 pygeometa was made publically available in support of the Treasury Board [Policy on Acceptable Network and Device Use](http://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=27122).
+In 2015 pygeometa was made publically available in support of the
+Canadian Treasury Board [Policy on Acceptable Network and Device Use](http://www.tbs-sct.gc.ca/pol/doc-eng.aspx?id=27122).
 
 ## Contact (this branch only)
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 {% import 'common/iso19139-charstring.j2' as cs %}
-<gmd:MD_Metadata xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd http://www.isotc211.org/2005/gmx http://www.isotc211.org/2005/gmx/gmx.xsd">
+<gmd:MD_Metadata xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd http://www.isotc211.org/2005/gmx http://www.isotc211.org/2005/gmx/gmx.xsd">
   <gmd:fileIdentifier>
     <gco:CharacterString>{{ record['metadata']['identifier'] }}</gco:CharacterString>
   </gmd:fileIdentifier>
@@ -24,6 +24,8 @@
   <gmd:contact>
   {% include "contact.j2" %}
   </gmd:contact>
+  {% else %}
+  <gmd:contact gco:nilReason="missing"/>
   {% endif %}
   <gmd:dateStamp>
     {% set datestamp = record['metadata']['datestamp']|normalize_datestring %}
@@ -241,9 +243,13 @@
       <gmd:characterSet>
         <gmd:MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode" codeSpace="ISOTC211/19115" codeListValue="{{ record['identification']['charset'] }}">{{ record['identification']['charset'] }}</gmd:MD_CharacterSetCode>
       </gmd:characterSet>
+      {% if record['identification']['topiccategory'] %}
       <gmd:topicCategory>
         <gmd:MD_TopicCategoryCode>{{ record['identification']['topiccategory'] }}</gmd:MD_TopicCategoryCode>
       </gmd:topicCategory>
+      {% else %}
+      <gmd:topicCategory gco:nilReason="missing"/>
+      {% endif %}
       {% if record['metadata']['hierarchyLevel'] == 'service' %}
       <srv:extent>
       {% else %}
@@ -332,16 +338,19 @@
       {% if k.startswith('distribution:') and v['format'] and v['format_version'] %}
       <gmd:distributionFormat>
         <gmd:MD_Format>
-          <gmd:name>{{ v['format'] }}</gmd:name>
-          <gmd:version>{{ v['format_version'] }}</gmd:version>
+          <gmd:name><gco:CharacterString>{{ v['format'] }}</gco:CharacterString></gmd:name>
+          <gmd:version><gco:CharacterString>{{ v['format_version'] }}</gco:CharacterString></gmd:version>
         </gmd:MD_Format>
       </gmd:distributionFormat>
       {% elif k.startswith('distribution:') and v['format'] and not v['format_version'] %}
       <gmd:distributionFormat>
         <gmd:MD_Format>
-          <gmd:name>{{ v['format'] }}</gmd:name>
+          <gmd:name><gco:CharacterString>{{ v['format'] }}</gco:CharacterString></gmd:name>
+          <gmd:version gco:nilReason="missing"/>
         </gmd:MD_Format>
       </gmd:distributionFormat>
+      {% else %}
+      <gmd:distributionFormat gco:nilReason="missing"/>
       {% endif %}
       {% endfor %}
       {% if record['contact:distribution'] %}
@@ -358,6 +367,8 @@
           </gmd:distributorContact>
         </gmd:MD_Distributor>
       </gmd:distributor>
+      {$ else %}
+      <gmd:distributor gco:nilReason="missing"/>
       {% endif %}
       <gmd:transferOptions>
         <gmd:MD_DigitalTransferOptions>
