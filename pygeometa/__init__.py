@@ -63,7 +63,7 @@ from jinja2.exceptions import TemplateNotFound
 
 from six.moves.configparser import ConfigParser
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 LOGGER = logging.getLogger(__name__)
 
@@ -238,12 +238,12 @@ def iso_to_dcat(xml, schema=None, schema_local=None):
         abspath = schema_local
 
     LOGGER.debug('Setting up transformations environment {}'.format(abspath))
+    ac = ET.XSLTAccessControl(read_network=True)
     dom = ET.parse(os.path.realpath(xml))
     xslt_root = ET.parse(abspath)
-    transform = ET.XSLT(xslt_root)
-    newdom = transform(dom)
+    transform = ET.XSLT(xslt_root, access_control=ac)
 
-    return newdom
+    return transform(dom)
 
 
 def iso_to_html(iso, schema=None, schema_local=None):
@@ -261,10 +261,10 @@ def iso_to_html(iso, schema=None, schema_local=None):
     LOGGER.debug('Setting up transformations environment {}'.format(abspath))
     dom = ET.parse(os.path.realpath(iso))
     xslt_root = ET.parse(abspath)
-    transform = ET.XSLT(xslt_root)
-    newdom = transform(dom)
+    ac = ET.XSLTAccessControl(read_network=False)
+    transform = ET.XSLT(xslt_root, access_control=ac)
 
-    return newdom
+    return transform(dom)
 
 
 def dcat_to_iso(rdf, schema=None, schema_local=None):

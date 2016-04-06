@@ -183,7 +183,6 @@
           </srv:connectPoint>
         </srv:SV_OperationMetadata>
       </srv:containsOperations>
-      <srv:operatesOn xlink:href="http://www.geoportal.rlp.de/mapbender/php/mod_dataISOMetadata.php?outputFormat=iso19139&amp;id=c2019e4f-3a3b-1caf-5c61-98a4343bf249" uuidref="c2019e4f3a3b1caf5c6198a4343bf249"/>
     </srv:SV_ServiceIdentification>
   </gmd:identificationInfo>
   <gmd:distributionInfo>

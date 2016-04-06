@@ -70,10 +70,14 @@ def msg(test_id, test_description):
 
 
 def normalize_space(inp):
-    if ',' in inp:  # sort arrays just in case
+    if ',' in inp and '\/' not in inp:  # sort arrays just in case
         arr = inp.split(',')
         arr.sort()
         inp = ','.join(arr)
+    elif '\/' in inp:
+        arr = inp.split('\/')
+        arr.sort()
+        inp = '\/'.join(arr)
     inp = inp.strip()
     inp = re.sub(r'\s+', ' ', inp)
     return inp
@@ -223,49 +227,56 @@ class PygeometaTest(unittest.TestCase):
     def test_rdf_lossless(self):
         """Test RDF2XML2RDF"""
 
-        # RDF -{1}> XML
-        rdf = get_abspath('./sample_conversions/afghanistan_election_data.ttl')
-        result = convert(rdf)
-        _, fp = tempfile.mkstemp()
+        test_files = [
+            './sample_conversions/afghanistan_election_data.ttl',
+            './sample_conversions/malawi-aid-projects.ttl',
+            './sample_conversions/newcastle-city-council-payments-over-500.ttl',
+        ]
 
-        with codecs.open(fp, 'w', encoding='utf-8') as f:
-            f.write(u'%s' % result)
-        f.close()
+        for t in test_files:
+            # RDF -{1}> XML
+            rdf = get_abspath(t)
+            result = convert(rdf)
+            _, fp = tempfile.mkstemp()
 
-        # {1}
-        mcf1 = read_mcf(os.path.realpath(fp))
+            with codecs.open(fp, 'w', encoding='utf-8') as f:
+                f.write(u'%s' % result)
+            f.close()
 
-        xml = render_template(fp, schema='iso19139-flanders')
+            # {1}
+            mcf1 = read_mcf(os.path.realpath(fp))
 
-        _, xp = tempfile.mkstemp()
-        f = open(xp, 'wb')
-        xml.write(f)
-        f.close()
+            xml = render_template(fp, schema='iso19139-flanders')
 
-        # XML -> RDF
-        rdf_content = iso_to_dcat(get_abspath(xp))
+            _, xp = tempfile.mkstemp()
+            f = open(xp, 'wb')
+            xml.write(f)
+            f.close()
 
-        _, rp = tempfile.mkstemp()
-        f = open(rp, 'wb')
-        rdf_content.write(f)
-        f.close()
+            # XML -> RDF
+            rdf_content = iso_to_dcat(get_abspath(xp))
 
-        # RDF -{2}> XML
-        rdf2 = os.path.realpath(rp)
-        result = convert(rdf2)
-        _, fp2 = tempfile.mkstemp()
+            _, rp = tempfile.mkstemp()
+            f = open(rp, 'wb')
+            rdf_content.write(f)
+            f.close()
 
-        with codecs.open(fp2, 'w', encoding='utf-8') as f:
-            f.write(u'%s' % result)
-        f.close()
+            # RDF -{2}> XML
+            rdf2 = os.path.realpath(rp)
+            result = convert(rdf2)
+            _, fp2 = tempfile.mkstemp()
 
-        # {2}
-        mcf2 = read_mcf(os.path.realpath(fp2))
+            with codecs.open(fp2, 'w', encoding='utf-8') as f:
+                f.write(u'%s' % result)
+            f.close()
 
-        # {1} ? == {2}
-        mcf1 = get_values(mcf1)
-        mcf2 = get_values(mcf2)
-        self.assertSetEqual(mcf1, mcf2)
+            # {2}
+            mcf2 = read_mcf(os.path.realpath(fp2))
+
+            # {1} ? == {2}
+            mcf1 = get_values(mcf1)
+            mcf2 = get_values(mcf2)
+            self.assertSetEqual(mcf1, mcf2)
 
     # XML -> RDF -{1}> XML -> RDF -{2}> XML: {1} ?== {2}
     def test_xml_lossless(self):
@@ -273,7 +284,9 @@ class PygeometaTest(unittest.TestCase):
 
         test_files = [
             './sample_conversions/ds_md_ispra-0001.xml',
-            './sample_conversions/srv_md_ispra-0001.xml'
+            './sample_conversions/srv_md_ispra-0001.xml',
+            './sample_conversions/mod_dataISOMetadata.xml',
+            './sample_conversions/mod_layerISOMetadata.xml',
         ]
 
         for t in test_files:

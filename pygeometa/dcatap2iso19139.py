@@ -301,7 +301,8 @@ def convert(rdf):
                          dc:title ?scheme_title ;
                          dc:issued ?scheme_issued } .
               OPTIONAL { ?scheme dc:type ?scheme_type .
-                         ?scheme a skos:ConceptScheme } .
+                         ?scheme a skos:ConceptScheme .
+                         FILTER (?scheme_type != <http://inspire.ec.europa.eu/glossary/SpatialReferenceSystem>) } .
            }""")
 
     keywords = {}
