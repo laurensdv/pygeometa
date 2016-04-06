@@ -1,0 +1,50 @@
+@prefix adms: <http://www.w3.org/ns/adms#> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix gsp: <http://www.opengis.net/ont/geosparql#> .
+@prefix locn: <http://www.w3.org/ns/locn#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <http://schema.org/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix time: <http://www.w3.org/2006/time> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://demo.ckan.org/dataset/a1a37b43-b32c-44e8-9b47-b2742408a90a> a dcat:Dataset ;
+    dct:description """Geocoded data on aid projects from the Government of Malawi's Aid Management Platform. It includes sub-national geocodes for approximately 550 aid projects undertaken in Malawi since 2000, representing nearly $5.3 billion in total commitments from over 30 donors or roughly 80% of all aid reported to the Ministry of Finance during that time. The work is the result of a collaboration between AidData, the Malawi Ministry of Finance, and Climate Change and African Political Stability Program (CCAPS) at the University of Texas.\r
+\r
+Citation: Peratsakis, Christian, Joshua Powell, Michael Findley, and Catherine Weaver. 2012. Geocoded Activity-Level Data from the Government of Malawi's Aid Management Platform. Washington D.C. AidData and the Robert S. Strauss Center for International Security and Law.""" ;
+    dct:identifier "a1a37b43-b32c-44e8-9b47-b2742408a90a" ;
+    dct:issued "2015-07-22T14:30:03.092164"^^xsd:dateTime ;
+    dct:modified "2015-07-27T17:23:48.991177"^^xsd:dateTime ;
+    dct:spatial [ a dct:Location ;
+            locn:geometry "POLYGON ((32.6897 -17.1358, 32.6897 -9.3733, 35.9242 -9.3733, 35.9242 -17.1358, 32.6897 -17.1358))"^^gsp:wktLiteral,
+                "{ \"type\": \"Polygon\", \"coordinates\": [ [ [32.689701, -17.135811],[32.689701, -9.373335], [35.92416, -9.373335], [35.92416, -17.135811], [32.689701, -17.135811] ] ] }"^^<https://www.iana.org/assignments/media-types/application/vnd.geo+json> ] ;
+    dct:title "Malawi Aid Projects" ;
+    dcat:distribution <http://demo.ckan.org/dataset/a1a37b43-b32c-44e8-9b47-b2742408a90a/resource/b717c20e-2006-4ad4-82d2-59b57ebc1ab0>,
+        <http://demo.ckan.org/dataset/a1a37b43-b32c-44e8-9b47-b2742408a90a/resource/f8e0c219-fd9a-4035-961d-8aa535b1ed54> ;
+    dcat:keyword "aid",
+        "country.mw",
+        "geocoded" ;
+    dcat:landingPage "http://blog.aiddata.org/2012/04/where-are-donors-working-in-malawi-new.html" .
+
+<http://demo.ckan.org/dataset/a1a37b43-b32c-44e8-9b47-b2742408a90a/resource/b717c20e-2006-4ad4-82d2-59b57ebc1ab0> a dcat:Distribution ;
+    dct:description "This dataset is based on the donor-reported aid information captured in the Malawi Aid Management Platform (AMP), hosted by the Malawi Ministry of Finance. Using project documents, gathered from in-country donor offices during three missions to Lilongwe, the AidData and CCAPS teams added standardized geocodes using the UCDP/AidData methodology. In total, projects from 30 donor agencies were geocoded for 548 projects, representing $5.3 billion in total commitments (approximately 80% of the total external assistance to Malawi reported to the government from 2000-2011). It represents the first effort to sub-nationally geocode all donors in a single partner country, and the first initiative of the sort envisioned by the Open Aid Partnership, an initiative spearheaded by the World Bank to increase the openness and effectiveness of development assistance at the subnational level. An interactive map displaying these data along with data on armed conflict, governance, and climate security vulnerability can be viewed at www.strausscenter.org/ccaps/mappingtool." ;
+    dct:format "CSV" ;
+    dct:title "Malawi_release_17april2012.csv" ;
+    dcat:accessURL "https://commondatastorage.googleapis.com/ckannet-storage/2012-04-21T162401/Malawi_release_17april2012.csv" ;
+    dcat:byteSize 1694283.0 ;
+    dcat:mediaType "text/csv" .
+
+<http://demo.ckan.org/dataset/a1a37b43-b32c-44e8-9b47-b2742408a90a/resource/f8e0c219-fd9a-4035-961d-8aa535b1ed54> a dcat:Distribution ;
+    dct:description "Variable and field definitions for the Malawi data." ;
+    dct:format "CSV" ;
+    dct:title "Malawi_release_17april2012.metadata.csv" ;
+    dcat:accessURL "https://commondatastorage.googleapis.com/ckannet-storage/2012-04-21T163145/Malawi_release_17april2012.metadata.csv" ;
+    dcat:byteSize 3345.0 ;
+    dcat:mediaType "text/csv" .
+

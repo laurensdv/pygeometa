@@ -224,7 +224,7 @@ class PygeometaTest(unittest.TestCase):
         """Test RDF2XML2RDF"""
 
         # RDF -{1}> XML
-        rdf = get_abspath('./sample_conversions/afghanistan.ttl')
+        rdf = get_abspath('./sample_conversions/afghanistan_election_data.ttl')
         result = convert(rdf)
         _, fp = tempfile.mkstemp()
 

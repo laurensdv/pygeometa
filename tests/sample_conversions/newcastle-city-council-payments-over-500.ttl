@@ -1,0 +1,111 @@
+@prefix adms: <http://www.w3.org/ns/adms#> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix gsp: <http://www.opengis.net/ont/geosparql#> .
+@prefix locn: <http://www.w3.org/ns/locn#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <http://schema.org/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix time: <http://www.w3.org/2006/time> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://demo.ckan.org/dataset/34315559-2b08-44eb-a2e6-ebe9ce1a266b> a dcat:Dataset ;
+    dct:description """Newcastle City Council spending data over £500. Data is published monthly and shows who was paid, how much was paid, and what this was for.\r
+\r
+This will include:\r
+\r
+* all items we purchase\r
+* payments we make to contractors carrying out work on our behalf\r
+* other spend we incur in carrying out our business.\r
+\r
+What will be excluded:\r
+\r
+* payments made to staff\r
+* housing benefit payments\r
+* sensitive social services information which could put\r
+* vulnerable individuals at risk\r
+* personal information, such as the names of individuals receiving payments\r
+* confidential information, such as council tax or business rate refund.\r
+\r
+The site offers monthly spending reports, only the last three are included here.""" ;
+    dct:identifier "34315559-2b08-44eb-a2e6-ebe9ce1a266b" ;
+    dct:issued "2015-07-22T14:29:59.767737"^^xsd:dateTime ;
+    dct:modified "2015-10-19T06:31:04.877980"^^xsd:dateTime ;
+    dct:publisher <http://opendatacommunities.org/id/metropolitan-district-council/newcastle> ;
+    dct:spatial <http://sws.geonames.org/3333174/> ;
+    dct:title "Newcastle City Council: Payments over £500" ;
+    owl:versionInfo "0.1" ;
+    dcat:contactPoint [ a vcard:Organization ;
+            vcard:fn "xxNewcastle City Council" ;
+            vcard:hasEmail "xxcsc@newcastle.gov.uk" ] ;
+    dcat:distribution <http://demo.ckan.org/dataset/34315559-2b08-44eb-a2e6-ebe9ce1a266b/resource/0c2bd47a-6ac5-412e-a337-1b45a952e07e>,
+        <http://demo.ckan.org/dataset/34315559-2b08-44eb-a2e6-ebe9ce1a266b/resource/1d1c9089-7037-48a3-a70d-fbecf146238f>,
+        <http://demo.ckan.org/dataset/34315559-2b08-44eb-a2e6-ebe9ce1a266b/resource/52a0c92e-99a3-427d-93a6-73ef5cdccc11>,
+        <http://demo.ckan.org/dataset/34315559-2b08-44eb-a2e6-ebe9ce1a266b/resource/5b958b29-a399-41aa-86ff-1d198a124140>,
+        <http://demo.ckan.org/dataset/34315559-2b08-44eb-a2e6-ebe9ce1a266b/resource/d51c9bd4-8256-4289-bdd7-962f8572efb0>,
+        <http://demo.ckan.org/dataset/34315559-2b08-44eb-a2e6-ebe9ce1a266b/resource/ff9038ef-41fd-4b00-9b1e-e942fbdaaf25> ;
+    dcat:keyword "UK",
+        "budget",
+        "payments-over-500",
+        "spending" ;
+    dcat:landingPage "http://www.newcastle.gov.uk/your-council/local-transparency/payments-over-500" .
+
+<http://demo.ckan.org/dataset/34315559-2b08-44eb-a2e6-ebe9ce1a266b/resource/0c2bd47a-6ac5-412e-a337-1b45a952e07e> a dcat:Distribution ;
+    dct:description "December 2011" ;
+    dct:format "CSV" ;
+    dct:title "December 2011" ;
+    dcat:accessURL "http://www.newcastle.gov.uk/sites/drupalncc.newcastle.gov.uk/files/wwwfileroot/your-council/local_transparency/december_2011.csv" ;
+    dcat:byteSize 1081957.0 ;
+    dcat:mediaType "text/csv" .
+
+<http://demo.ckan.org/dataset/34315559-2b08-44eb-a2e6-ebe9ce1a266b/resource/1d1c9089-7037-48a3-a70d-fbecf146238f> a dcat:Distribution ;
+    dct:description "October 2011" ;
+    dct:format "CSV" ;
+    dct:title "October 2011" ;
+    dcat:accessURL "http://www.newcastle.gov.uk/sites/drupalncc.newcastle.gov.uk/files/wwwfileroot/your-council/local_transparency/october_2011.csv" ;
+    dcat:byteSize 850440.0 ;
+    dcat:mediaType "text/csv" .
+
+<http://demo.ckan.org/dataset/34315559-2b08-44eb-a2e6-ebe9ce1a266b/resource/52a0c92e-99a3-427d-93a6-73ef5cdccc11> a dcat:Distribution ;
+    dct:description "November 2011" ;
+    dct:format "CSV" ;
+    dct:title "November 2011" ;
+    dcat:accessURL "http://www.newcastle.gov.uk/sites/drupalncc.newcastle.gov.uk/files/wwwfileroot/your-council/local_transparency/november_2011.csv" .
+
+<http://demo.ckan.org/dataset/34315559-2b08-44eb-a2e6-ebe9ce1a266b/resource/5b958b29-a399-41aa-86ff-1d198a124140> a dcat:Distribution ;
+    dct:format "CSV" ;
+    dct:title "February 2012" ;
+    dcat:accessURL "http://www.newcastle.gov.uk/sites/drupalncc.newcastle.gov.uk/files/wwwfileroot/your-council/local_transparency/february_2012.csv" ;
+    dcat:byteSize 951982.0 ;
+    dcat:mediaType "text/csv" .
+
+<http://demo.ckan.org/dataset/34315559-2b08-44eb-a2e6-ebe9ce1a266b/resource/d51c9bd4-8256-4289-bdd7-962f8572efb0> a dcat:Distribution ;
+    dct:format "CSV" ;
+    dct:title "January 2012" ;
+    dcat:accessURL "http://www.newcastle.gov.uk/sites/drupalncc.newcastle.gov.uk/files/wwwfileroot/your-council/local_transparency/january_2012.csv" ;
+    dcat:byteSize 1080880.0 ;
+    dcat:mediaType "text/csv" .
+
+<http://demo.ckan.org/dataset/34315559-2b08-44eb-a2e6-ebe9ce1a266b/resource/ff9038ef-41fd-4b00-9b1e-e942fbdaaf25> a dcat:Distribution ;
+    dct:description "September 2011" ;
+    dct:format "CSV" ;
+    dct:title "September 2011" ;
+    dcat:accessURL "http://www.newcastle.gov.uk/sites/drupalncc.newcastle.gov.uk/files/wwwfileroot/your-council/local_transparency/september_2011.csv" ;
+    dcat:byteSize 764773.0 ;
+    dcat:mediaType "text/csv" .
+
+<http://opendatacommunities.org/id/metropolitan-district-council/newcastle> a foaf:Organization ;
+    foaf:homepage "http://www.newcastle.gov.uk/" ;
+    foaf:mbox "xxcsc@newcastle.gov.uk" ;
+    foaf:name "xxNewcastle City Council" .
+
+<http://sws.geonames.org/3333174/> a dct:Location ;
+    skos:prefLabel "Newcastle upon Tyne" ;
+    locn:geometry "POLYGON ((-1.5308 54.9588, -1.5308 55.0796, -1.7753 55.0796, -1.7753 54.9588, -1.5308 54.9588))"^^gsp:wktLiteral,
+        "{ \"type\": \"Polygon\", \"coordinates\": [ [ [-1.5308, 54.9588],[-1.5308, 55.0796], [-1.7753, 55.0796], [-1.7753, 54.9588], [-1.5308, 54.9588] ] ] }"^^<https://www.iana.org/assignments/media-types/application/vnd.geo+json> .
+
